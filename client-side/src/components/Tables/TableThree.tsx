@@ -74,7 +74,7 @@ const TableThree = () => {
                    
                    <p className="text-sm">{employee.employeeName}</p>
                  </div>
-                  </td>
+                </td>
                   
                 
                 <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
