@@ -1,14 +1,100 @@
 "use client"
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
+import axios from "axios";
 
-
+// const [userData, setUserData] = useState(null);
+// const [error, setError] = useState(null);
 const SignUp: React.FC = () => {
-  return (
-    
+  //const [userData,setUserData]=useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
+  const [error, setError] = useState("");
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await fetch("/signup", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: JSON.stringify(userData)
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorMessage = await response.text();
+  //       throw new Error(errorMessage);
+  //     }
+
+  //     const data = await response.json();
+  //     setUserData(data);
+  //   }catch (error: unknown) {
+  //     setError((error as Error).message);
+  // }
+  // };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  //   e.preventDefault();
+  //   const userData = { name, email, password, confirmPassword };
+  //   try {
+  //     const response = await axios.post("/api/auth/signup", userData, {
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       }
+  //     });
+  
+  //     if (response.status !== 200) {
+  //       throw new Error(response.statusText);
+  //     }
+  //     // console.log(response.data);
+  //    console.log(userData);
+  //     console.log("succesfully");
+    
+  //   } catch (error: unknown) {
+  //     setError((error as Error).message);
+  //   }
+  // };
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const userData = { name, email, password, confirmPassword };
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/signup', userData);
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+//   try {
+//     const response = await fetch('/auth/signup', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(userData) 
+//     });
+//     console.log("sucessfully");
+//     const data = await response.json();
+//     setMessage(data.message); // Set the response message
+//   } catch (error) {
+//     console.error('Error:', error);
+//   }
+// };
+  // const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  //   const { name, value } = e.target;
+  //   setUserData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value
+  //   }));
+  // };
+
+ 
+  return (
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -167,7 +253,7 @@ const SignUp: React.FC = () => {
               Sign Up to <span className="text-orange-500">Lyzoo Attendance</span> 
             </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -175,10 +261,12 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="text"
+                      value={name}
+                      onChange={(e)=>setName(e.target.value)}
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    />
-
+                     />
+       
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -200,6 +288,7 @@ const SignUp: React.FC = () => {
                         </g>
                       </svg>
                     </span>
+      
                   </div>
                 </div>
 
@@ -210,6 +299,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e)=>setEmail(e.target.value)}
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -241,6 +332,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      value={password}
+                      onChange={(e)=>setPassword(e.target.value)}
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -276,6 +369,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      value={confirmPassword}
+                      onChange={(e)=>setConfirmPassword(e.target.value)}
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -307,7 +402,7 @@ const SignUp: React.FC = () => {
                 <div className="mb-5">
                 <button
                   className=" overflow-hidden relative w-full p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
-                >
+               >
                   Sign Up
                   <span
                     className="absolute w-full h-32 -top-8 -left-2 bg-green-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"

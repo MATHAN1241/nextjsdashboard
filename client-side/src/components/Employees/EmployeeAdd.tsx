@@ -1,7 +1,119 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import router from "next/router";
+import { ChangeEvent, FormEvent, useState } from "react";
 
-const AddEmployees = () => {
+
+
+const AddEmployees: React.FC =  () => {
+  // const [formData, setFormData] = useState<FormData>({
+  //   employeeId: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   contactNo: '',
+  //   employeeRole: '',
+  //   employeeSalary: '',
+  //   address: '',
+  //   image: null
+  // });
+
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  // const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     setFormData({ ...formData, image: e.target.files[0] });
+  //   }
+  // };
+  // const router = useRouter();
+  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   try {
+  //     const formDataWithImage = new FormData();
+  //     Object.entries(formData).forEach(([key, value]) => {
+  //       formDataWithImage.append(key, value);
+  //     });
+  //     console.log(formDataWithImage);
+  //     const response = await axios.post('http://localhost:5000/api/employees', formDataWithImage);
+  //     console.log(response.data);
+  //     router.push('/employees')
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // };
+  // const [formData, setFormData] = useState({
+  //   employeeId: '',
+  //   firstName: '',
+  //   lastName: '',
+  //   email: '',
+  //   contactNo: '',
+  //   employeeRole: '',
+  //   employeeSalary: '',
+  //   address: '',
+  //   image: null as File | null // File type for storing image file
+  // });
+
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
+
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0]; // Get the first file from the input
+  //   if(file){
+  //   setFormData({ ...formData, image: file });
+  //   }
+  // };
+  const [employeeId, setEmployeeId] = useState('');
+const [firstName, setFirstName] = useState('');
+const [lastName, setLastName] = useState('');
+const [email, setEmail] = useState('');
+const [contactNo, setContactNo] = useState('');
+const [employeeRole, setEmployeeRole] = useState('');
+const [employeeSalary, setEmployeeSalary] = useState('');
+const [address, setAddress] = useState('');
+const [imagePath, setImagePath] = useState<File | null>(null);
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+   const formData={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
+  //  const formData = new FormData();
+  //   formData.append('employeeId', employeeId);
+  //   formData.append('firstName', firstName);
+  //   formData.append('lastName', lastName);
+  //   formData.append('email', email);
+  //   formData.append('contactNo', contactNo);
+  //   formData.append('employeeRole', employeeRole);
+  //   formData.append('employeeSalary', employeeSalary);
+  //   formData.append('address', address);
+  //   if (imagePath) {
+  //     formData.append('imagePath', imagePath);
+  //   }
+   try {
+      // const formDataWithImage = new FormData();
+      // Object.entries(formData).forEach(([key, value]) => {
+      //   formDataWithImage.append(key, value as string | Blob); // Append each field to FormData
+      // });
+      console.log(formData);
+      const response = await axios.post('http://localhost:5000/api/employees', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(response.data);
+      router.push('/employees');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
   return (
     <>
       <Breadcrumb pageName="Add Employees" />
@@ -13,7 +125,7 @@ const AddEmployees = () => {
               Employee Add Form
             </h3>
           </div>
-          <form action="#">
+          <form action="#" onSubmit={handleSubmit}>
             <div className="p-6.5">
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
@@ -21,6 +133,9 @@ const AddEmployees = () => {
                 </label>
                 <input
                   type="text"
+                  name="employeeId"
+                  value={employeeId}
+                  onChange={(e)=>setEmployeeId(e.target.value)}
                   placeholder="Enter your Employee ID"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                 />
@@ -31,9 +146,13 @@ const AddEmployees = () => {
                     First name <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="Enter your first name"
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                   type="text"
+                   name="firstName"
+                   value={firstName}
+                   onChange={(e)=>setFirstName(e.target.value)}
+                 
+                   placeholder="Enter your first name"
+                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
                 </div>
 
@@ -43,6 +162,10 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="text"
+                    name="lastName"
+                    value={lastName}
+                  
+                    onChange={(e)=>setLastName(e.target.value)}
                     placeholder="Enter your last name"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -55,6 +178,9 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
                     placeholder="Enter your email address"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -64,7 +190,13 @@ const AddEmployees = () => {
                     Contact No <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="number"
+                    // type="number"
+                    type="tel" 
+                    pattern="[0-9]{10}" 
+                    
+                    name="contactNo"
+                    value={contactNo}
+                    onChange={(e)=>setContactNo(e.target.value)}
                     placeholder="Enter your contact number"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -77,6 +209,9 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="text"
+                    name="employeeRole"
+                    value={employeeRole}
+                    onChange={(e)=>setEmployeeRole(e.target.value)}
                     placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -88,6 +223,9 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="text"
+                    name="employeeSalary"
+                    value={employeeSalary}
+                    onChange={(e)=>setEmployeeSalary(e.target.value)}
                     placeholder="Enter your employee salary"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -99,6 +237,10 @@ const AddEmployees = () => {
                 </label>
                 <input
                   type="file"
+                  name='image'
+                  // value={imagePath}
+                  // onChange={(e) => setImagePath(e.target.value)}
+                  onChange={(e) => setImagePath(e.target.files ? e.target.files[0] : null)}
                   className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                 />
               </div>
@@ -107,15 +249,19 @@ const AddEmployees = () => {
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Address <span className="text-meta-1">*</span>
                 </label>
-                <textarea
-                  rows={6}
+                <input
+                  // rows={6}
+                  
+                  name="address"
+                  value={address}
+                  onChange={(e)=>setAddress(e.target.value)}
                   placeholder="Enter your complete address"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                ></textarea>
+                />
               </div>
 
-              <Link
-                href="/employees"
+              <button
+                // href="/employees"
                 className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
               >
                 <span>
@@ -141,7 +287,7 @@ const AddEmployees = () => {
                   </svg>
                 </span>
                 Add New Employee
-              </Link>
+              </button>
             </div>
           </form>
         </div>

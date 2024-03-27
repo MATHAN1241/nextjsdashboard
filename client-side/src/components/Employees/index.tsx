@@ -1,29 +1,91 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Employee } from "@/types/employee";
+// import { Employee } from "@/types/employee";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import router, { Router } from "next/router";
+import { useEffect, useState } from "react";
 
-const employeeData: Employee[] = [
-  {
-    DP: "/images/user/user-01.png",
-    employeeID: "E001",
-    employeeName: "John Doe",
-    contactNo: "+1234567890",
-    role: "Manager",
-    salary: 50000,
-  },
-  {
-    DP: "/images/user/user-02.png",
-    employeeID: "E002",
-    employeeName: "Jane Smith",
-    contactNo: "+9876543210",
-    role: "Developer",
-    salary: 40000,
-  },
-  // Add more employee objects as needed
-];
+interface Employee {
+  _id: string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email:string;
+  contactNo: string;
+  employeeRole: string;
+  employeeSalary: string;
+  imagePath: string;
+}
+// const employeeData: Employee[] = [
+//   {
+//     DP: "/images/user/user-01.png",
+//     employeeID: "E001",
+//     employeeName: "John Doe",
+//     contactNo: "+1234567890",
+//     role: "Manager",
+//     salary: 50000,
+//   },
+//   {
+//     DP: "/images/user/user-02.png",
+//     employeeID: "E002",
+//     employeeName: "Jane Smith",
+//     contactNo: "+9876543210",
+//     role: "Developer",
+//     salary: 40000,
+//   },
+//   // Add more employee objects as needed
+// ];
 
-const Employees = () => {
+const Employees  : React.FC = () => {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const handleEdit = async (employee: Employee) => {
+    
+    try {
+      // Make API call to update employee data
+      // router.push('employees/add-employees')
+      const response = await axios.put(`http://localhost:5000/api/employees/${employee._id}`, employees);
+      // If API call is successful, update the state with the updated employee data
+       //setEmployees(response.data);
+      console.log(response.data);
+      setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === employee._id ? response.data : emp)));
+      console.log('Employee updated successfully:', response.data);
+    } catch (error) {
+      console.error('Error updating employee:', error);
+    }
+    // Implement edit functionality
+  };
+
+  const handleDelete = async (id: string) => {
+    // Implement delete functionality
+    try {
+      const response = await axios.delete(`http://localhost:5000/api/employees/${id}`);
+      if (response.status === 200) {
+        // Remove the deleted employee from the state
+        setEmployees(employees.filter(employee => employee._id !== id));
+        console.log('Employee deleted successfully:', response.data);
+      } else {
+        console.error('Failed to delete employee:', response.data);
+      }
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Employees" />
@@ -64,7 +126,13 @@ const Employees = () => {
                   Employee ID
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Employee Name
+                  Employee First Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Employee Last Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Email
                 </th>
                 <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                   Contact No
@@ -81,12 +149,15 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody>
-              {employeeData.map((employee, key) => (
+              {employees.map((employee, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <div className="h-12.5 w-15 rounded-md">
                       <Image
-                        src={employee.DP}
+                         //src={''}
+                       //   src={employee.imagePath}
+                          src={`/${employee.imagePath}`}
+                         //src={`public/images/${employee.imagePath}`}
                         width={60}
                         height={50}
                         alt="Employee Display Picture"
@@ -95,15 +166,24 @@ const Employees = () => {
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {employee.employeeID}
+                      {employee.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div>
-                      <p className="text-black dark:text-white">{employee.employeeName}</p>
+                      <p className="text-black dark:text-white">{employee.firstName}</p>
                     </div>
                   </td>
-
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <div>
+                      <p className="text-black dark:text-white">{employee.lastName}</p>
+                    </div>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.email}
+                    </p>
+                  </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
                       {employee.contactNo}
@@ -111,18 +191,19 @@ const Employees = () => {
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {employee.role}
+                      {employee.employeeRole}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      ${employee.salary}
+                      ${employee.employeeSalary}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                        <Link href={'/employees/add-employees'}>
-                        <button className="hover:text-primary">
+                    <Link href={'/employees/add-employees'}> 
+                        <button className="hover:text-primary"onClick={() => handleEdit(employee)}>
+                       
                         <svg
                           className="fill-current"
                           width="18"
@@ -136,11 +217,12 @@ const Employees = () => {
                             fill=""
                           />
                         </svg>
+                       
                       </button>
-                        </Link>
+                      </Link>   
                       
 
-                      <button className="hover:text-primary">
+                      <button className="hover:text-primary" onClick={()=>handleDelete(employee._id)}>
                         <svg
                           className="fill-current"
                           width="18"
