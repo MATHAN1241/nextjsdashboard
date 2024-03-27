@@ -201,9 +201,8 @@ const Employees  : React.FC = () => {
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                    <Link href={'/employees/add-employees'}> 
-                        <button className="hover:text-primary"onClick={() => handleEdit(employee)}>
-                       
+                        <Link href={'/employees/add-employees'}>
+                        <button className="hover:text-primary">
                         <svg
                           className="fill-current"
                           width="18"
