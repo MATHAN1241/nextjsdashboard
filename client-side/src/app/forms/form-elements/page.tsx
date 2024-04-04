@@ -18,3 +18,23 @@ const FormElementsPage = () => {
 };
 
 export default FormElementsPage;
+
+
+
+// import React from 'react';
+// import LeaveRequestForm from '../form-layout/page';
+
+// const LeaveRequest = () => {
+//   return (
+//     <div className="flex justify-center items-center h-screen">
+//       <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
+//         <h1 className="text-2xl font-bold mb-4">Employee Leave Request Form</h1>
+//         <LeaveRequestForm />
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LeaveRequest;
+
+
