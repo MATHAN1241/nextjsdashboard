@@ -1,23 +1,31 @@
 import { Employee } from "@/types/employee";
 import Image from "next/image";
+import Link from "next/link";
 
 const employeeData: Employee[] = [
-  {
-    DP: "/images/user/user-01.png",
-    employeeID: "E001",
-    employeeName: "John Doe",
-    contactNo: "+1234567890",
-    role: "Manager",
-    salary: 50000,
-  },
-  {
-    DP: "/images/user/user-02.png",
-    employeeID: "E002",
-    employeeName: "Jane Smith",
-    contactNo: "+9876543210",
-    role: "Developer",
-    salary: 40000,
-  },
+  // {
+  //   DP: "/images/user/user-01.png",
+  //   employeeID: "E001",
+  //   FirstName: "John Doe",
+  //   Lastname:"k",
+  //   role:"software developer",
+  //   salary:"$30,000",
+  //   Date:"01-04-2024"
+  //   checkintime:"10:00-AM",
+  //   checkouttime:"6:30-PM",
+  //   totalhours:"8hrs",
+
+
+   
+  // },
+  // {
+  //   DP: "/images/user/user-02.png",
+  //   employeeID: "E002",
+  //   employeeName: "Jane Smith",
+  //   contactNo: "+9876543210",
+  //   role: "Developer",
+  //   salary: 40000,
+  // },
   // Add more employee objects as needed
 ];
 
@@ -28,70 +36,112 @@ const TableThree = () => {
         <table className="w-full table-auto">
           <thead>
             <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
+              <th className="min-w-[240px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
                 DP
               </th>
-              <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
                 Employee ID
               </th>
-              <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                Employee Name
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+               First Name
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Contact No
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                Last Name
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
                 Role
               </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+             
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
                 Salary
               </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+               Date
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                checkin Time
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+               checkout Time
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                checkin status
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+               present/absent
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                Total hours
+              </th>
+
               <th className="px-4 py-4 font-medium text-black dark:text-white">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody>
-            {employeeData.map((employee, key) => (
-              <tr key={key}>
+            {/* {/* {employeeData.map((employee, key) => ( */}
+               <tr >
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <div className="h-12.5 w-15 rounded-md">
                     <Image
-                      src={employee.DP}
+                      src={"/images/user/user-01.png"}
                       width={60}
                       height={50}
                       alt="Employee Display Picture"
                     />
                   </div>
                   </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <h5 className="font-medium text-black dark:text-white">
-                      {employee.employeeID}
+                      01
                     </h5>
                   </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                  <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <div>
                    
-                   <p className="text-sm">{employee.employeeName}</p>
+                   <p className="text-black dark:text-white">john</p>
                  </div>
                 </td>
                   
                 
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    {employee.contactNo}
+                    Doe
                   </p>
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{employee.role}</p>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">Software Developer</p>
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    ${employee.salary}
+                    $50,000
                   </p>
                 </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">01-04-2024</p>
+                </td>
+                
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">10:00-AM</p>
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">6:30-PM</p>
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">good/late</p>
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">present/absent</p>
+        
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">8hrs</p>
+        
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <div className="flex items-center space-x-3.5">
+                  {/* <Link href={'/Tables/TableEdit'}> */}
                     <button className="hover:text-primary">
                       <svg
                         className="fill-current"
@@ -106,7 +156,9 @@ const TableThree = () => {
                           fill=""
                         />
                       </svg>
+                      
                     </button>
+                    {/* </Link> */}
 
                     <button className="hover:text-primary">
                       <svg
@@ -158,7 +210,7 @@ const TableThree = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+           
           </tbody>
         </table>
       </div>
