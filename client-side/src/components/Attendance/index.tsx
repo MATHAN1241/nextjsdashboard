@@ -1,6 +1,7 @@
 import React from "react";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import Image from "next/image";
+import Link from "next/link";
 
 const AttendanceList = () => {
   return (
@@ -22,12 +23,14 @@ const AttendanceList = () => {
             </span>
             <p className="dark:text-white-50 italic">Web Developer</p>
           </div>
-          <a
+          <Link 
+          
             className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
-            href="#"
-          >
+               href={'attendance/attendancedetailview'}>
+  
             View Profile
-          </a>
+          
+          </Link>
         </div>
 
         <div className="group relative flex h-72 w-80 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl bg-slate-50 from-sky-200 via-orange-200 to-orange-700 text-center shadow-xl before:absolute before:top-0 before:h-24 before:w-80 before:rounded-t-2xl before:bg-gradient-to-bl before:transition-all before:duration-500 before:content-[''] before:hover:h-44 before:hover:h-72 before:hover:w-80 before:hover:scale-95 before:hover:rounded-b-2xl dark:bg-boxdark">
@@ -47,8 +50,8 @@ const AttendanceList = () => {
           </div>
           <a
             className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
-            href="#"
-          >
+            href={'attendance/attendancedetailviewtwo'}>
+          
             View Profile
           </a>
         </div>
@@ -69,8 +72,8 @@ const AttendanceList = () => {
           </div>
           <a
             className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
-            href="#"
-          >
+            href={'attendance/attendancedetailviewthree'}>
+          
             View Profile
           </a>
         </div>
@@ -91,8 +94,8 @@ const AttendanceList = () => {
           </div>
           <a
             className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
-            href="#"
-          >
+            href={'attendance/attendancedetailviewfour'}>
+          
             View Profile
           </a>
         </div>
