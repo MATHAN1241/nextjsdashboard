@@ -4,8 +4,11 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import router, { Router } from "next/router";
+//import router, { Router, useRouter } from "next/router";
+import {useRouter} from "next/navigation";
 import { useEffect, useState } from "react";
+import EmployeeEdit from "./EmployeeEdit";
+
 
 interface Employee {
   _id: string;
@@ -40,7 +43,7 @@ interface Employee {
 
 const Employees  : React.FC = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
-
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -53,24 +56,35 @@ const Employees  : React.FC = () => {
 
     fetchEmployees();
   }, []);
-
+  const router=useRouter();
+  
   const handleEdit = async (employee: Employee) => {
     
-    try {
+    // try {
       // Make API call to update employee data
       // router.push('employees/add-employees')
-      const response = await axios.put(`http://localhost:5000/api/employees/${employee._id}`, employees);
+      //const response = await axios.get(`http://localhost:5000/api/employees/${employee._id}`);
       // If API call is successful, update the state with the updated employee data
        //setEmployees(response.data);
-      console.log(response.data);
-      setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === employee._id ? response.data : emp)));
-      console.log('Employee updated successfully:', response.data);
-    } catch (error) {
-      console.error('Error updating employee:', error);
-    }
+       router.push(`/employees/edit-employees?_id=${employee._id}`);
+       //console.log(response.data);
+      
+       
+      // setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === employee._id ? response.data : emp)));
+      // console.log('Employee updated successfully:', response.data);
+    // } catch (error) {
+    //   console.error('Error updating employee:', error);
+    // }
     // Implement edit functionality
   };
+  // const handleEdit = (employee: Employee) => {
+  //   setSelectedEmployee(employee);
+  // };
 
+  // const handleUpdateEmployee = (updatedEmployee: Employee) => {
+  //   setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === updatedEmployee._id ? updatedEmployee : emp)));
+  //   setSelectedEmployee(null); // Close the form after updating
+  // };
   const handleDelete = async (id: string) => {
     // Implement delete functionality
     try {
@@ -148,20 +162,25 @@ const Employees  : React.FC = () => {
                 </th>
               </tr>
             </thead>
+          
             <tbody>
+             
               {employees.map((employee, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <div className="h-12.5 w-15 rounded-md">
-                      <Image
+                    {employee.imagePath &&  <Image
                          //src={''}
-                       //   src={employee.imagePath}
-                          src={`/${employee.imagePath}`}
+                        // src={employee.imagePath}
+                       // loader={ {src: `http://localhost:5000/${employee.imagePath}`,} }
+                          src={`http://localhost:5000/${employee.imagePath}`}
+                        //src={`http://localhost:5000/public/images/25.jpg`}
+                        //src="http://localhost:5000/public/images/25.jpg"
                          //src={`public/images/${employee.imagePath}`}
                         width={60}
                         height={50}
                         alt="Employee Display Picture"
-                      />
+                      />}
                     </div>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
@@ -201,8 +220,11 @@ const Employees  : React.FC = () => {
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                        <Link href={'/employees/add-employees'}>
-                        <button className="hover:text-primary">
+                     {/* <Link href={'/employees/edit-employees'} > */}
+                        <button className="hover:text-primary"  onClick={() => handleEdit(employee)}  >
+                        {/* <Link href={'/employees/edit-employees'} > */}
+                        {/* <Link href={`/employees/edit-employees?_id=${employee._id}`}> */}
+                        {/* <Link href={`/employees/edit-employees/${employee._id}`}> */}
                         <svg
                           className="fill-current"
                           width="18"
@@ -215,10 +237,10 @@ const Employees  : React.FC = () => {
                             d="M13.9229 1.11914L16.8804 4.07665C17.0366 4.23289 17.0366 4.48914 16.8804 4.64539L15.2399 6.28589L11.7138 2.75977L13.3543 1.11914C13.5106 0.962891 13.7668 0.962891 13.9229 1.11914ZM10.1479 4.89414L14.5893 9.33552L9.45039 14.4744H5.00808V10.0321L10.1479 4.89414Z"
                             fill=""
                           />
-                        </svg>
-                       
+                        </svg>    
+                        {/* </Link>      */}
                       </button>
-                      </Link>   
+                      {/* </Link>    */}
                       
 
                       <button className="hover:text-primary" onClick={()=>handleDelete(employee._id)}>
@@ -274,6 +296,9 @@ const Employees  : React.FC = () => {
               ))}
             </tbody>
           </table>
+          {/* {selectedEmployee && (
+        <EmployeeEdit employee={selectedEmployee} onUpdate={handleUpdateEmployee} />
+      )} */}
         </div>
       </div>
     </>

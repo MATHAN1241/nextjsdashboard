@@ -1,321 +1,288 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export const metadata: Metadata = {
-  title: "Next.js Settings | TailAdmin - Next.js Dashboard Template",
-  description:
-    "This is Next.js Settings page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
-};
-
+// export const metadata: Metadata = {
+//   title: "Lyzoo Ai Attendance",
+//   description:
+//     "This is Next.js Settings page for TailAdmin - Next.js Tailwind CSS Admin Dashboard Template",
+// };
+// export const metadata: Metadata = {
+//   title: "Lyzoo AI Attendance Dashboard",
+//   description: "This is Lyzoo AI Attendance Dashboard",
+// };
+interface Employee {
+  _id: string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email:string;
+  contactNo: string;
+  employeeRole: string;
+  employeeSalary: string;
+  imagePath: string;
+}
 const Settings = () => {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+      //  const response = await axios.get('/api/employees'); // Replace with your backend endpoint
+      const response = await axios.get<Employee[]>('http://localhost:5000/api/employees'); 
+      setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+ 
+
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-270">
         <Breadcrumb pageName="Settings" />
-
-        <div className="grid grid-cols-5 gap-8">
-          <div className="col-span-5 xl:col-span-3">
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-              <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Personal Information
-                </h3>
-              </div>
-              <div className="p-7">
-                <form action="#">
-                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                    <div className="w-full sm:w-1/2">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="fullName"
-                      >
-                        Full Name
-                      </label>
-                      <div className="relative">
-                        <span className="absolute left-4.5 top-4">
-                          <svg
-                            className="fill-current"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g opacity="0.8">
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M3.72039 12.887C4.50179 12.1056 5.5616 11.6666 6.66667 11.6666H13.3333C14.4384 11.6666 15.4982 12.1056 16.2796 12.887C17.061 13.6684 17.5 14.7282 17.5 15.8333V17.5C17.5 17.9602 17.1269 18.3333 16.6667 18.3333C16.2064 18.3333 15.8333 17.9602 15.8333 17.5V15.8333C15.8333 15.1703 15.5699 14.5344 15.1011 14.0655C14.6323 13.5967 13.9964 13.3333 13.3333 13.3333H6.66667C6.00363 13.3333 5.36774 13.5967 4.8989 14.0655C4.43006 14.5344 4.16667 15.1703 4.16667 15.8333V17.5C4.16667 17.9602 3.79357 18.3333 3.33333 18.3333C2.8731 18.3333 2.5 17.9602 2.5 17.5V15.8333C2.5 14.7282 2.93899 13.6684 3.72039 12.887Z"
-                                fill=""
-                              />
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M9.99967 3.33329C8.61896 3.33329 7.49967 4.45258 7.49967 5.83329C7.49967 7.214 8.61896 8.33329 9.99967 8.33329C11.3804 8.33329 12.4997 7.214 12.4997 5.83329C12.4997 4.45258 11.3804 3.33329 9.99967 3.33329ZM5.83301 5.83329C5.83301 3.53211 7.69849 1.66663 9.99967 1.66663C12.3009 1.66663 14.1663 3.53211 14.1663 5.83329C14.1663 8.13448 12.3009 9.99996 9.99967 9.99996C7.69849 9.99996 5.83301 8.13448 5.83301 5.83329Z"
-                                fill=""
-                              />
-                            </g>
-                          </svg>
-                        </span>
-                        <input
-                          className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                          type="text"
-                          name="fullName"
-                          id="fullName"
-                          placeholder="Devid Jhon"
-                          defaultValue="Devid Jhon"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="w-full sm:w-1/2">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="phoneNumber"
-                      >
-                        Phone Number
-                      </label>
-                      <input
-                        className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        type="text"
-                        name="phoneNumber"
-                        id="phoneNumber"
-                        placeholder="+990 3343 7865"
-                        defaultValue="+990 3343 7865"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="emailAddress"
-                    >
-                      Email Address
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4.5 top-4">
-                        <svg
-                          className="fill-current"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.8">
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M3.33301 4.16667C2.87658 4.16667 2.49967 4.54357 2.49967 5V15C2.49967 15.4564 2.87658 15.8333 3.33301 15.8333H16.6663C17.1228 15.8333 17.4997 15.4564 17.4997 15V5C17.4997 4.54357 17.1228 4.16667 16.6663 4.16667H3.33301ZM0.833008 5C0.833008 3.6231 1.9561 2.5 3.33301 2.5H16.6663C18.0432 2.5 19.1663 3.6231 19.1663 5V15C19.1663 16.3769 18.0432 17.5 16.6663 17.5H3.33301C1.9561 17.5 0.833008 16.3769 0.833008 15V5Z"
-                              fill=""
-                            />
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M0.983719 4.52215C1.24765 4.1451 1.76726 4.05341 2.1443 4.31734L9.99975 9.81615L17.8552 4.31734C18.2322 4.05341 18.7518 4.1451 19.0158 4.52215C19.2797 4.89919 19.188 5.4188 18.811 5.68272L10.4776 11.5161C10.1907 11.7169 9.80879 11.7169 9.52186 11.5161L1.18853 5.68272C0.811486 5.4188 0.719791 4.89919 0.983719 4.52215Z"
-                              fill=""
-                            />
-                          </g>
-                        </svg>
-                      </span>
-                      <input
-                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        type="email"
-                        name="emailAddress"
-                        id="emailAddress"
-                        placeholder="devidjond45@gmail.com"
-                        defaultValue="devidjond45@gmail.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
-                    >
-                      Username
-                    </label>
-                    <input
-                      className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                      type="text"
-                      name="Username"
-                      id="Username"
-                      placeholder="devidjhon24"
-                      defaultValue="devidjhon24"
-                    />
-                  </div>
-
-                  <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="Username"
-                    >
-                      BIO
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-4.5 top-4">
-                        <svg
-                          className="fill-current"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 20 20"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.8" clipPath="url(#clip0_88_10224)">
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M1.56524 3.23223C2.03408 2.76339 2.66997 2.5 3.33301 2.5H9.16634C9.62658 2.5 9.99967 2.8731 9.99967 3.33333C9.99967 3.79357 9.62658 4.16667 9.16634 4.16667H3.33301C3.11199 4.16667 2.90003 4.25446 2.74375 4.41074C2.58747 4.56702 2.49967 4.77899 2.49967 5V16.6667C2.49967 16.8877 2.58747 17.0996 2.74375 17.2559C2.90003 17.4122 3.11199 17.5 3.33301 17.5H14.9997C15.2207 17.5 15.4326 17.4122 15.5889 17.2559C15.7452 17.0996 15.833 16.8877 15.833 16.6667V10.8333C15.833 10.3731 16.2061 10 16.6663 10C17.1266 10 17.4997 10.3731 17.4997 10.8333V16.6667C17.4997 17.3297 17.2363 17.9656 16.7674 18.4344C16.2986 18.9033 15.6627 19.1667 14.9997 19.1667H3.33301C2.66997 19.1667 2.03408 18.9033 1.56524 18.4344C1.0964 17.9656 0.833008 17.3297 0.833008 16.6667V5C0.833008 4.33696 1.0964 3.70107 1.56524 3.23223Z"
-                              fill=""
-                            />
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M16.6664 2.39884C16.4185 2.39884 16.1809 2.49729 16.0056 2.67253L8.25216 10.426L7.81167 12.188L9.57365 11.7475L17.3271 3.99402C17.5023 3.81878 17.6008 3.5811 17.6008 3.33328C17.6008 3.08545 17.5023 2.84777 17.3271 2.67253C17.1519 2.49729 16.9142 2.39884 16.6664 2.39884ZM14.8271 1.49402C15.3149 1.00622 15.9765 0.732178 16.6664 0.732178C17.3562 0.732178 18.0178 1.00622 18.5056 1.49402C18.9934 1.98182 19.2675 2.64342 19.2675 3.33328C19.2675 4.02313 18.9934 4.68473 18.5056 5.17253L10.5889 13.0892C10.4821 13.196 10.3483 13.2718 10.2018 13.3084L6.86847 14.1417C6.58449 14.2127 6.28409 14.1295 6.0771 13.9225C5.87012 13.7156 5.78691 13.4151 5.85791 13.1312L6.69124 9.79783C6.72787 9.65131 6.80364 9.51749 6.91044 9.41069L14.8271 1.49402Z"
-                              fill=""
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_88_10224">
-                              <rect width="20" height="20" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </span>
-
-                      <textarea
-                        className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                        name="bio"
-                        id="bio"
-                        rows={6}
-                        placeholder="Write your bio here"
-                        defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque posuere fermentum urna, eu condimentum mauris tempus ut. Donec fermentum blandit aliquet."
-                      ></textarea>
-                    </div>
-                  </div>
-
-                  <div className="flex justify-end gap-4.5">
-                    <button
-                      className="flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
-                      type="submit"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div className="col-span-5 xl:col-span-2">
-            <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-              <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
-                  Your Photo
-                </h3>
-              </div>
-              <div className="p-7">
-                <form action="#">
-                  <div className="mb-4 flex items-center gap-3">
-                    <div className="h-14 w-14 rounded-full">
-                      <Image
-                        src={"/images/user/user-03.png"}
-                        width={55}
-                        height={55}
-                        alt="User"
-                      />
-                    </div>
+        <div className="container mx-auto">
+  <h1 className="text-3xl font-bold mb-4">Employee Information</h1>
+  {/* <div className="bg-white shadow-md rounded my-6">
+    <table className="max-w-full">
+      <thead>
+        <tr className="bg-gray-200">
+          <th className="py-3 px-6 text-left">Employee ID</th>
+          <th className="py-3 px-6 text-left">Name</th>
+          <th className="py-3 px-6 text-left">Role</th>
+          <th className="py-3 px-6 text-left">Image</th>
+          <th className="py-3 px-6 text-left">Total Present</th>
+          <th className="py-3 px-6 text-left">Total Absent</th>
+          <th className="py-3 px-6 text-left">Total Days</th>
+          <th className="py-3 px-6 text-left">Monthly Wage</th>
+          <th className="py-3 px-6 text-left">Pay Amount</th>
+          <th className="py-3 px-6 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {employees.map((employee, index) => (
+          <tr key={index} >
+            <td className="py-4 px-6">{employee.employeeId}</td>
+            <td className="py-4 px-6">{employee.firstName}</td>
+            <td className="py-4 px-6">{employee.employeeRole}</td>
+            <td className="py-4 px-6">{employee.employeeSalary}</td>
+            <td className="py-4 px-6">Mathan</td>
+            <td className="py-4 px-6">Mathan</td>
+            <td className="py-4 px-6">Mathan</td>
+            <td className="py-4 px-6">Mathan</td>
+            <td className="py-4 px-6">Mathan</td>
+            <td className="py-4 px-6">
+              <button onClick={() => generatePDF(employee)} className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded">Generate PDF Payslip</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div> */}
+  <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+               
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Employee ID
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Employee First Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Employee Last Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Email
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Contact No
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Role
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Salary
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Month
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  present Days
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Absent Days
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Hike
+                </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Total Hours
+                </th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {employees.map((employee, key) => (
+                <tr key={key}>
+                  
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <h5 className="font-medium text-black dark:text-white">
+                      {employee.employeeId}
+                    </h5>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Edit your photo
-                      </span>
-                      <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Update
-                        </button>
-                      </span>
+                      <p className="text-black dark:text-white">{employee.firstName}</p>
                     </div>
-                  </div>
-
-                  <div
-                    id="FileUpload"
-                    className="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border border-dashed border-primary bg-gray px-4 py-4 dark:bg-meta-4 sm:py-7.5"
-                  >
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                    />
-                    <div className="flex flex-col items-center justify-center space-y-3">
-                      <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <div>
+                      <p className="text-black dark:text-white">{employee.lastName}</p>
+                    </div>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.email}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.contactNo}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.employeeRole}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      ${employee.employeeSalary}
+                    </p>
+                  </td>
+                  
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <div className="flex items-center space-x-3.5">
+                     {/* <Link href={'/employees/edit-employees'} > */}
+                        <button className="hover:text-primary"    >
+                        {/* <Link href={'/employees/edit-employees'} > */}
+                        {/* <Link href={`/employees/edit-employees?_id=${employee._id}`}> */}
+                        {/* <Link href={`/employees/edit-employees/${employee._id}`}> */}
                         <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 16 16"
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
                           <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M1.99967 9.33337C2.36786 9.33337 2.66634 9.63185 2.66634 10V12.6667C2.66634 12.8435 2.73658 13.0131 2.8616 13.1381C2.98663 13.2631 3.1562 13.3334 3.33301 13.3334H12.6663C12.8431 13.3334 13.0127 13.2631 13.1377 13.1381C13.2628 13.0131 13.333 12.8435 13.333 12.6667V10C13.333 9.63185 13.6315 9.33337 13.9997 9.33337C14.3679 9.33337 14.6663 9.63185 14.6663 10V12.6667C14.6663 13.1971 14.4556 13.7058 14.0806 14.0809C13.7055 14.456 13.1968 14.6667 12.6663 14.6667H3.33301C2.80257 14.6667 2.29387 14.456 1.91879 14.0809C1.54372 13.7058 1.33301 13.1971 1.33301 12.6667V10C1.33301 9.63185 1.63148 9.33337 1.99967 9.33337Z"
-                            fill="#3C50E0"
+                            d="M13.9229 1.11914L16.8804 4.07665C17.0366 4.23289 17.0366 4.48914 16.8804 4.64539L15.2399 6.28589L11.7138 2.75977L13.3543 1.11914C13.5106 0.962891 13.7668 0.962891 13.9229 1.11914ZM10.1479 4.89414L14.5893 9.33552L9.45039 14.4744H5.00808V10.0321L10.1479 4.89414Z"
+                            fill=""
+                          />
+                        </svg>    
+                        {/* </Link>      */}
+                      </button>
+                      {/* </Link>    */}
+                      
+                      <button className="hover:text-primary" >
+                        <svg
+                          className="fill-current"
+                          width="18"
+                          height="18"
+                          viewBox="0 0 18 18"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M13.7535 2.47502H11.5879V1.9969C11.5879 1.15315 10.9129 0.478149 10.0691 0.478149H7.90352C7.05977 0.478149 6.38477 1.15315 6.38477 1.9969V2.47502H4.21914C3.40352 2.47502 2.72852 3.15002 2.72852 3.96565V4.8094C2.72852 5.42815 3.09414 5.9344 3.62852 6.1594L4.07852 15.4688C4.13477 16.6219 5.09102 17.5219 6.24414 17.5219H11.7004C12.8535 17.5219 13.8098 16.6219 13.866 15.4688L14.3441 6.13127C14.8785 5.90627 15.2441 5.3719 15.2441 4.78127V3.93752C15.2441 3.15002 14.5691 2.47502 13.7535 2.47502ZM7.67852 1.9969C7.67852 1.85627 7.79102 1.74377 7.93164 1.74377H10.0973C10.2379 1.74377 10.3504 1.85627 10.3504 1.9969V2.47502H7.70664V1.9969H7.67852ZM4.02227 3.96565C4.02227 3.85315 4.10664 3.74065 4.24727 3.74065H13.7535C13.866 3.74065 13.9785 3.82502 13.9785 3.96565V4.8094C13.9785 4.9219 13.8941 5.0344 13.7535 5.0344H4.24727C4.13477 5.0344 4.02227 4.95002 4.02227 4.8094V3.96565ZM11.7285 16.2563H6.27227C5.79414 16.2563 5.40039 15.8906 5.37227 15.3844L4.95039 6.2719H13.0785L12.6566 15.3844C12.6004 15.8625 12.2066 16.2563 11.7285 16.2563Z"
+                            fill=""
                           />
                           <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7.5286 1.52864C7.78894 1.26829 8.21106 1.26829 8.4714 1.52864L11.8047 4.86197C12.0651 5.12232 12.0651 5.54443 11.8047 5.80478C11.5444 6.06513 11.1223 6.06513 10.8619 5.80478L8 2.94285L5.13807 5.80478C4.87772 6.06513 4.45561 6.06513 4.19526 5.80478C3.93491 5.54443 3.93491 5.12232 4.19526 4.86197L7.5286 1.52864Z"
-                            fill="#3C50E0"
+                            d="M9.00039 9.11255C8.66289 9.11255 8.35352 9.3938 8.35352 9.75942V13.3313C8.35352 13.6688 8.63477 13.9782 9.00039 13.9782C9.33789 13.9782 9.64727 13.6969 9.64727 13.3313V9.75942C9.64727 9.3938 9.33789 9.11255 9.00039 9.11255Z"
+                            fill=""
                           />
                           <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M7.99967 1.33337C8.36786 1.33337 8.66634 1.63185 8.66634 2.00004V10C8.66634 10.3682 8.36786 10.6667 7.99967 10.6667C7.63148 10.6667 7.33301 10.3682 7.33301 10V2.00004C7.33301 1.63185 7.63148 1.33337 7.99967 1.33337Z"
-                            fill="#3C50E0"
+                            d="M11.2502 9.67504C10.8846 9.64692 10.6033 9.90004 10.5752 10.2657L10.4064 12.7407C10.3783 13.0782 10.6314 13.3875 10.9971 13.4157C11.0252 13.4157 11.0252 13.4157 11.0533 13.4157C11.3908 13.4157 11.6721 13.1625 11.6721 12.825L11.8408 10.35C11.8408 9.98442 11.5877 9.70317 11.2502 9.67504Z"
+                            fill=""
+                          />
+                          <path
+                            d="M6.72245 9.67504C6.38495 9.70317 6.1037 10.0125 6.13182 10.35L6.3287 12.825C6.35683 13.1625 6.63808 13.4157 6.94745 13.4157C6.97558 13.4157 6.97558 13.4157 7.0037 13.4157C7.3412 13.3875 7.62245 13.0782 7.59433 12.7407L7.39745 10.2657C7.39745 9.90004 7.08808 9.64692 6.72245 9.67504Z"
+                            fill=""
                           />
                         </svg>
-                      </span>
-                      <p>
-                        <span className="text-primary">Click to upload</span> or
-                        drag and drop
-                      </p>
-                      <p className="mt-1.5">SVG, PNG, JPG or GIF</p>
-                      <p>(max, 800 X 800px)</p>
+                      </button>
+                     
+                      {/* DOWNLOAD  BUTTON */}
+                      {/* <button className="hover:text-primary">
+                      <svg
+                        className="fill-current"
+                        width="18"
+                        height="18"
+                        viewBox="0 0 18 18"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M16.8754 11.6719C16.5379 11.6719 16.2285 11.9531 16.2285 12.3187V14.8219C16.2285 15.075 16.0316 15.2719 15.7785 15.2719H2.22227C1.96914 15.2719 1.77227 15.075 1.77227 14.8219V12.3187C1.77227 11.9812 1.49102 11.6719 1.12539 11.6719C0.759766 11.6719 0.478516 11.9531 0.478516 12.3187V14.8219C0.478516 15.7781 1.23789 16.5375 2.19414 16.5375H15.7785C16.7348 16.5375 17.4941 15.7781 17.4941 14.8219V12.3187C17.5223 11.9531 17.2129 11.6719 16.8754 11.6719Z"
+                          fill=""
+                        />
+                        <path
+                          d="M8.55074 12.3469C8.66324 12.4594 8.83199 12.5156 9.00074 12.5156C9.16949 12.5156 9.31012 12.4594 9.45074 12.3469L13.4726 8.43752C13.7257 8.1844 13.7257 7.79065 13.5007 7.53752C13.2476 7.2844 12.8539 7.2844 12.6007 7.5094L9.64762 10.4063V2.1094C9.64762 1.7719 9.36637 1.46252 9.00074 1.46252C8.66324 1.46252 8.35387 1.74377 8.35387 2.1094V10.4063L5.40074 7.53752C5.14762 7.2844 4.75387 7.31252 4.50074 7.53752C4.24762 7.79065 4.27574 8.1844 4.50074 8.43752L8.55074 12.3469Z"
+                          fill=""
+                        />
+                      </svg>
+                    </button> */}
                     </div>
-                  </div>
-
-                  <div className="flex justify-end gap-4.5">
-                    <button
-                      className="flex justify-center rounded border border-stroke px-6 py-2 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="flex justify-center rounded bg-primary px-6 py-2 font-medium text-gray hover:bg-opacity-90"
-                      type="submit"
-                    >
-                      Save
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {/* {selectedEmployee && (
+        <EmployeeEdit employee={selectedEmployee} onUpdate={handleUpdateEmployee} />
+      )} */}
         </div>
+      </div>
+</div>
       </div>
     </DefaultLayout>
   );

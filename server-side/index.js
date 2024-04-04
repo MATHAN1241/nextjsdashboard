@@ -139,7 +139,7 @@ mongoose.connect('mongodb://localhost:27017/lyzooattendance', {
 app.use('/api/auth/signup', signupRoute);
 app.use('/api/auth/login', loginRoute);
 app.use('/api/employees',employeeAdd);
-
+app.use(express.static('public'));
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

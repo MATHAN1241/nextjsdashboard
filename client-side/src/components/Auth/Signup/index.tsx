@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 // const [userData, setUserData] = useState(null);
 // const [error, setError] = useState(null);
@@ -15,7 +16,8 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [error, setError] = useState("");
-
+  const [error1, setError1] = useState("");
+const router=useRouter();
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
 
@@ -62,13 +64,49 @@ const SignUp: React.FC = () => {
   // };
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+
+  // Check if the password meets the criteri
     const userData = { name, email, password, confirmPassword };
+    const uppercaseRegex = /[A-Z]/;
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+   
     try {
+      if (
+    
+        password.length < 2 ||  // Minimum length requirement
+        name.length < 2 ||  // At least one uppercase letter
+        email.length< 2  || confirmPassword.length<2 // At least one symbol
+      ) {
+        setError("*Fill in the Form" );
+     
+      }  
+      else if (
+        password.length < 8 ||  // Minimum length requirement
+        !uppercaseRegex.test(password) ||  // At least one uppercase letter
+        !symbolRegex.test(password)  // At least one symbol
+      ) {
+        setError("*Password only One upper Case and One sympol and 8 characters" );
+      
+      }  
+      
+      else if (password !== confirmPassword) {
+          setError("*Passwords do not match" );
+          
+      }
+      else{
+          setError('');
+         
+      }
       const response = await axios.post('http://localhost:5000/api/auth/signup', userData);
+      router.push('/auth/signin')
+
       console.log(response.data);
     } catch (error) {
       console.error('Error:', error);
     }
+  
+   
   };
 //   try {
 //     const response = await fetch('/auth/signup', {
@@ -252,8 +290,9 @@ const SignUp: React.FC = () => {
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign Up to <span className="text-orange-500">Lyzoo Attendance</span> 
             </h2>
-
+           
               <form onSubmit={handleSubmit}>
+              {error && <p className="text-pink-500">{error}</p>}
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -324,7 +363,7 @@ const SignUp: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
+               
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Password
@@ -398,7 +437,7 @@ const SignUp: React.FC = () => {
                     </span>
                   </div>
                 </div>
-
+                
                 <div className="mb-5">
                 <button
                   className=" overflow-hidden relative w-full p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"

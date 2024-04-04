@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import router from "next/router";
+import router from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 
@@ -79,12 +79,51 @@ const [employeeRole, setEmployeeRole] = useState('');
 const [employeeSalary, setEmployeeSalary] = useState('');
 const [address, setAddress] = useState('');
 const [imagePath, setImagePath] = useState<File | null>(null);
+const [error, setError]=useState('');
+const router=useRouter();
+const handleEmailBlur = async (e: { target: { value: any; }; }) => {
+  const email = e.target.value;
+  try {
+    const response = await axios.post('http://localhost:5000/api/employees/verify-email', { email });
+    if (response.data.exists) {
+      setError('*Email already exists');
+    } else {
+      setError('');
+    }
+  } catch (error) {
+    console.error('Error verifying email:', error);
+    setError('Error verifying email');
+  }
+};
 
+const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
+  const contactNo = e.target.value;
+  try {
+    const response = await axios.post('http://localhost:5000/api/employees/verify-contactno', { contactNo });
+    if (response.data.exists) {
+      setError('*Contact number already exists');
+    } else {
+      setError('');
+    }
+  } catch (error) {
+    console.error('Error verifying contact number:', error);
+    setError('Error verifying contact number');
+  }
+};
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+   
    const formData={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
-  //  const formData = new FormData();
+   if (!employeeId || !firstName || !lastName || !email || !contactNo || !employeeRole || !employeeSalary || !address || !imagePath) {
+    setError('*Please fill in all required fields');
+  
+  }
+  else{
+    setError('');
+  }
+
+   //  const formData = new FormData();
   //   formData.append('employeeId', employeeId);
   //   formData.append('firstName', firstName);
   //   formData.append('lastName', lastName);
@@ -95,7 +134,9 @@ const [imagePath, setImagePath] = useState<File | null>(null);
   //   formData.append('address', address);
   //   if (imagePath) {
   //     formData.append('imagePath', imagePath);
+
   //   }
+
    try {
       // const formDataWithImage = new FormData();
       // Object.entries(formData).forEach(([key, value]) => {
@@ -111,6 +152,7 @@ const [imagePath, setImagePath] = useState<File | null>(null);
       router.push('/employees');
     } catch (error) {
       console.error('Error:', error);
+      
     }
   };
 
@@ -125,8 +167,11 @@ const [imagePath, setImagePath] = useState<File | null>(null);
               Employee Add Form
             </h3>
           </div>
-          <form action="#" onSubmit={handleSubmit}>
+          
+          <form action="#" onSubmit={handleSubmit} >
+        
             <div className="p-6.5">
+            {<p className="text-pink-500">{error}</p>}
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Employee ID <span className="text-meta-1">*</span>
@@ -181,6 +226,7 @@ const [imagePath, setImagePath] = useState<File | null>(null);
                     name="email"
                     value={email}
                     onChange={(e)=>setEmail(e.target.value)}
+                    onBlur={handleEmailBlur}
                     placeholder="Enter your email address"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -197,6 +243,7 @@ const [imagePath, setImagePath] = useState<File | null>(null);
                     name="contactNo"
                     value={contactNo}
                     onChange={(e)=>setContactNo(e.target.value)}
+                  onBlur={handleContactNoBlur}
                     placeholder="Enter your contact number"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -263,7 +310,7 @@ const [imagePath, setImagePath] = useState<File | null>(null);
               <button
                 // href="/employees"
                 className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
-              >
+                  >
                 <span>
                   <svg
                     className="fill-current"

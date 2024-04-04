@@ -10,12 +10,24 @@ import { useRouter } from "next/navigation";
 const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const[error,setError]=useState('');
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault();   
     try {
       const formData={email,password};
+      if(!email || !password){
+        setError("*Fill in the Form");
+       
+      }else{
+        setError('');
+        
+      }
+      
+      // if((email==='admin@gmail.com')&& (password ==='Admin@123')){
+      //     router.push('/dashboard');
+      // }
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
       console.log(response.data);
       console.log(router);
@@ -23,7 +35,18 @@ const SignIn: React.FC = () => {
       // Redirect or perform actions after successful login
     } catch (error) {
       console.error('Error:', error);
+      // if (error === 'Email error') {
+      //   window.alert('Invalid email format. Please enter a valid email.');
+      // } else if (error === 'Invalid password') {
+      //   window.alert('Invalid password format. Please enter a valid password.');
+      // } else if (error === 'User not found') {
+      //   window.alert('User not found. Please check your credentials and try again.');
+      // } else {
+      //   window.alert('Failed to login.');
+      // }
+
     }
+    
   };
 
   return (
@@ -184,6 +207,7 @@ const SignIn: React.FC = () => {
             </h2>
 
             <form onSubmit={handleSubmit}>
+            {error && <p className="text-pink-500 decoration-4">{error}</p>}
               <div className="mb-4">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
                   Email

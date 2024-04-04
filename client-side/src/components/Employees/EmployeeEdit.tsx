@@ -1,21 +1,160 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+// import { Employee } from "@/types/employee";
+import axios from "axios";
+//import { useRouter } from "next/dist/client/components/navigation";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+//import { useParams, useRouter } from "next/navigation";
+//import router from "next/router";
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+interface Employee {
+  //_id:string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email:string;
+  contactNo: string;
+  employeeRole: string;
+  employeeSalary: string;
+  address:string;
+  imagePath: string;
+}
+const EditEmployees : React.FC = ()=> {
+  // const [editedEmployee, setEditedEmployee] = useState<Employee>({ ...employee });
+  const [employee, setEmployee] = useState<Employee | null>(null);
 
-const EditEmployees = () => {
+  const [employeeId, setEmployeeId] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [contactNo, setContactNo] = useState('');
+  const [employeeRole, setEmployeeRole] = useState('');
+  const [employeeSalary, setEmployeeSalary] = useState('');
+  const [address, setAddress] = useState('');
+  const [imagePath, setImagePath] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+  
+ // const router = useRouter();
+ const queryString = window.location.search;
+
+ // Parse the query string to get the URLSearchParams object
+ const params = new URLSearchParams(queryString);
+
+ // Get the value of the _id parameter
+ //const _id = params.get('_id');
+ // Get the _id from the query parameters
+  // const [employee, setEmployee] = useState('');
+ //const { _id } = useParams();
+  //const {_id}=req.params();
+  //const { _id } = router.query._id || { }; 
+  const [id, setId] = useState('');
+  useEffect(() => {
+    const _id = new URLSearchParams( window.location.search).get('_id');
+    setId(_id??"");
+    const fetchEmployee = async () => {
+      
+      try {
+     
+        const response = await axios.get(`http://localhost:5000/api/employees/${_id}`);
+        //setEmployee(response.data);
+        const { employeeId,firstName, lastName, email, contactNo, employeeRole, employeeSalary,address,imagePath } = response.data;
+        setEmployee(response.data);
+        setEmployeeId(employeeId);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setEmail(email);
+        setContactNo(contactNo);
+        setEmployeeRole(employeeRole);
+        setEmployeeSalary(employeeSalary);
+        setAddress(address);
+      //  setImagePath(imagePath);
+       setImagePreview(imagePath);
+      } catch (error) {
+        console.error('Error fetching employee:', error);
+      }
+    };
+
+    if (_id) {
+       fetchEmployee();
+    }
+  }, []);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedImage = e.target.files[0];
+      setImagePath(selectedImage);
+      const imageURL = URL.createObjectURL(selectedImage);
+      setImagePreview(imageURL);
+    }
+  };
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // const updatedEmployee: Employee = {
+    //   firstName,
+    //   lastName,
+    //   email,
+    //   contactNo,
+    //   employeeRole,
+    //   employeeSalary,
+    //   employeeId,
+    //   address,
+    //   imagePath:'',
+    // //  _id: ""
+    // };
+    const updatedEmployee={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
+    try {
+      // Convert FormData to JSON object
+      // const updatedEmployeeData = Object.fromEntries(formData.entries());
+  
+      // Make API call to update employee data
+      //const response = await axios.put(`http://localhost:5000/api/employees/${id}`, updatedEmployee);
+      const response = await axios.put('http://localhost:5000/api/employees/'+id, updatedEmployee, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log(updatedEmployee);
+      console.log('Employee updated successfully:', response.data);
+      //router.push('/employees');
+      // Handle any further actions upon successful update, such as showing a success message or redirecting the user
+    } catch (error) {
+      console.error('Error updating employee:', error);
+      // Handle error scenarios, such as displaying an error message to the user
+    }
+  };
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setEditedEmployee(prevState => ({
+  //     ...prevState,
+  //     [name]: value,
+  //   }));
+  // };
+  // const handleUpdate = async () => {
+  //   try {
+  //     const response = await axios.put(`http://localhost:5000/api/employees/${editedEmployee._id}`, editedEmployee);
+  //     console.log('Employee updated successfully:', response.data);
+  //     onUpdate(response.data);
+  //   } catch (error) {
+  //     console.error('Error updating employee:', error);
+  //   }
+  // };
   return (
     <>
       <Breadcrumb pageName="Edit Employees" />
       <div className="flex flex-col gap-9">
         {/* <!-- Contact Form --> */}
+        {employee ?  
+        
         <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
             <h3 className="font-medium text-black dark:text-white">
               Employee Edit Form
             </h3>
           </div>
-          <form action="#">
+          <form action="#" onSubmit={handleSubmit}>
             <div className="p-6.5">
-              <div className="mb-4.5">
+              {/* <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Employee ID <span className="text-meta-1">*</span>
                 </label>
@@ -112,12 +251,147 @@ const EditEmployees = () => {
                   placeholder="Enter your complete address"
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                 ></textarea>
+              </div> */}
+               <div className="mb-4.5">
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Employee ID <span className="text-meta-1">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="employeeId"
+                  value={employeeId}
+                  onChange={(e)=>setEmployeeId(e.target.value)}
+                  placeholder="Enter your Employee ID"
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                />
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    First name <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                   type="text"
+                   name="firstName"
+                   value={firstName}
+                   onChange={(e)=>setFirstName(e.target.value)}
+                 
+                   placeholder="Enter your first name"
+                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Last name <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={lastName}
+                  
+                    onChange={(e)=>setLastName(e.target.value)}
+                    placeholder="Enter your last name"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Email <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
+                    placeholder="Enter your email address"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Contact No <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    // type="number"
+                    type="tel" 
+                    pattern="[0-9]{10}" 
+                    
+                    name="contactNo"
+                    value={contactNo}
+                    onChange={(e)=>setContactNo(e.target.value)}
+                    placeholder="Enter your contact number"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Employee Role <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="employeeRole"
+                    value={employeeRole}
+                    onChange={(e)=>setEmployeeRole(e.target.value)}
+                    placeholder="Enter your employee role"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+
+                <div className="w-full xl:w-1/2">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Employee Salary <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="employeeSalary"
+                    value={employeeSalary}
+                    onChange={(e)=>setEmployeeSalary(e.target.value)}
+                    placeholder="Enter your employee salary"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                  />
+                </div>
+              </div>
+              <div className="mb-4.5">
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Add Image <span className="text-meta-1">*</span>
+                </label>
+               {/* {imagePreview && <img src={imagePreview} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />} */}
+                <input
+                  type="file"
+                  name='image'
+                  // value={imagePreview}
+                  // onChange={(e) => setImagePath(e.target.value)}
+                  onChange={(e) => setImagePath(e.target.files ? e.target.files[0] : null)}
+                  //onChange={handleImageChange}
+                  className="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:px-5 file:py-3 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                />
               </div>
 
-              <Link
+              <div className="mb-6">
+                <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  Address <span className="text-meta-1">*</span>
+                </label>
+                <input
+                  // rows={6}
+                  
+                  name="address"
+                  value={address}
+                  onChange={(e)=>setAddress(e.target.value)}
+                  placeholder="Enter your complete address"
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                />
+              </div>
+              <button  className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10" 
+                 >
+              {/* <Link
                 href="/employees"
                 className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
-              >
+              > */}
                 <span>
                   <svg
                     className="fill-current"
@@ -141,10 +415,12 @@ const EditEmployees = () => {
                   </svg>
                 </span>
                 Update Employee
-              </Link>
+              {/* </Link> */}
+              </button>
             </div>
           </form>
         </div>
+        : <div></div> }
       </div>
     </>
   );
