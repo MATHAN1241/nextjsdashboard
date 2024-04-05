@@ -1,7 +1,10 @@
+'use client'
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Employee } from "@/types/employee";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+
 
 const employeeData: Employee[] = [
   {
@@ -24,6 +27,8 @@ const employeeData: Employee[] = [
 ];
 
 const Employees = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <>
       <Breadcrumb pageName="Employees" />
@@ -138,10 +143,17 @@ const Employees = () => {
                         </svg>
                       </button>
                         </Link>
-                      
+                      {/* delete button */}
+     
 
-                      <button className="hover:text-primary">
-                        <svg
+ 
+    <div className="relative">
+      <div className="relative inline-block">
+        <button
+          className="hover:text-primary"
+          onClick={() => setShowModal(true)}
+        >
+          <svg
                           className="fill-current"
                           width="18"
                           height="18"
@@ -166,7 +178,37 @@ const Employees = () => {
                             fill=""
                           />
                         </svg>
-                      </button>
+        </button>
+      </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <p className="text-lg mb-4">Are you sure you want to delete?</p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowModal(false)}
+                className="mr-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              >
+                No
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+ 
+
+
+                      
+                      {/* end of delete button */}
+
+
                       {/* DOWNLOAD  BUTTON */}
                       {/* <button className="hover:text-primary">
                       <svg
