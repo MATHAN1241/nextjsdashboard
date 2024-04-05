@@ -1,11 +1,49 @@
-import React from "react";
+"use client"
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import Image from "next/image";
-
+import axios from "axios";
+interface Employee {
+  //_id:string;
+  employeeId: string;
+  firstName: string;
+  lastName: string;
+  email:string;
+  contactNo: string;
+  employeeRole: string;
+  employeeSalary: string;
+  address:string;
+  imagePath: string;
+}
 const Attendanceview = () => {
+ //const [employee, setEmployee] = useState<Employee | null>(null);
+ 
+  const queryString = window.location.search;
+
+ // Parse the query string to get the URLSearchParams object
+ const params = new URLSearchParams(queryString);
+ const [id, setId] = useState(''); 
+ const [employeeData, setEmployeeData] = useState<Employee | null>(null);
+  useEffect(() => {
+    const _id = new URLSearchParams( window.location.search).get('_id');
+    setId(_id??"");
+    const fetchEmployeeData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/employees/${_id}`);
+        setEmployeeData(response.data);
+    
+      
+      } catch (error) {
+        console.error('Error fetching employee data:', error);
+      }
+    };
+  
+    fetchEmployeeData();
+  }, []); 
   return (
     <React.Fragment>
     <Breadcrumb pageName="Attendance viewpage"/>
+    {employeeData && (
      <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
@@ -56,11 +94,12 @@ const Attendanceview = () => {
           </thead>
           <tbody>
             {/* {/* {employeeData.map((employee, key) => ( */}
-               <tr >
+           
+               <tr  >
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <div className="h-12.5 w-15 rounded-md">
                     <Image
-                      src={"/images/user/user-03.png"}
+                      src={`http://localhost:5000/${employeeData.imagePath}`}
                       width={60}
                       height={50}
                       alt="Employee Display Picture"
@@ -69,28 +108,28 @@ const Attendanceview = () => {
                   </td>
                   <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <h5 className="font-medium text-black dark:text-white">
-                      01
+                      {employeeData.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <div>
                    
-                   <p className="text-black dark:text-white">Geroge</p>
+                   <p className="text-black dark:text-white">{employeeData.firstName}</p>
                  </div>
                 </td>
                   
                 
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                   Jonhson
+                   {employeeData.lastName}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">Web Developer</p>
+                  <p className="text-black dark:text-white">{employeeData.employeeRole}</p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                    $50,000
+                   ${employeeData.employeeSalary}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
@@ -141,6 +180,7 @@ const Attendanceview = () => {
               </table>
               </div>
               </div>
+    )}
             </React.Fragment>
 
 

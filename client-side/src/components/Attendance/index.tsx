@@ -3,6 +3,13 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 
+import { Employee } from "@/types/employee";
+import axios from "axios";
+
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+
 const AttendanceList = () => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   useEffect(() => {
@@ -17,6 +24,11 @@ const AttendanceList = () => {
 
     fetchEmployees();
   }, []);
+  const router=useRouter();
+  const handleClick=(employee:Employee)=>{
+    router.push(`attendance/attendancedetailview?_id=${employee._id}`);
+  };
+
   return (
     <React.Fragment>
       <Breadcrumb pageName="Employees List" />
@@ -42,14 +54,19 @@ const AttendanceList = () => {
             <p className="dark:text-white-50 italic">{employee.employeeId}</p>
              
           </div>
-          <Link 
+          {/* <Link 
           
             className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
                href={'attendance/attendancedetailview'}>
-  
+                 
             View Profile
           
-          </Link>
+          </Link> */}
+          <button  className="z-10 rounded-full bg-orange-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
+           onClick={() => handleClick(employee)}
+           >
+             ViewProfile
+          </button>
         </div>
         ))}
         {/* <div className="group relative flex h-72 w-80 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl bg-slate-50 from-sky-200 via-orange-200 to-orange-700 text-center shadow-xl before:absolute before:top-0 before:h-24 before:w-80 before:rounded-t-2xl before:bg-gradient-to-bl before:transition-all before:duration-500 before:content-[''] before:hover:h-44 before:hover:h-72 before:hover:w-80 before:hover:scale-95 before:hover:rounded-b-2xl dark:bg-boxdark">

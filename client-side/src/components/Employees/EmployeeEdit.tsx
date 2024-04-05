@@ -88,6 +88,7 @@ const EditEmployees : React.FC = ()=> {
       setImagePreview(imageURL);
     }
   };
+  const router=useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // const updatedEmployee: Employee = {
@@ -102,6 +103,7 @@ const EditEmployees : React.FC = ()=> {
     //   imagePath:'',
     // //  _id: ""
     // };
+    
     const updatedEmployee={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
     try {
       // Convert FormData to JSON object
@@ -116,7 +118,7 @@ const EditEmployees : React.FC = ()=> {
       });
       console.log(updatedEmployee);
       console.log('Employee updated successfully:', response.data);
-      //router.push('/employees');
+      router.push('/employees');
       // Handle any further actions upon successful update, such as showing a success message or redirecting the user
     } catch (error) {
       console.error('Error updating employee:', error);
