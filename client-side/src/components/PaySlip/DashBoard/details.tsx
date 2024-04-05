@@ -1,5 +1,4 @@
 "use client";
-import CardDataStats from "@/components/CardDataStats";
 import React from "react";
 
 const Details: React.FC = () => {
@@ -113,10 +112,14 @@ const Details: React.FC = () => {
           <input type="range" min="1" max="100" className="w-3/4 mb-2" /> {/* Slider */}
           <p className="text-center mb-2">*****</p>
           <p className="text-start mb-2">Deduction:****</p> {/* Text line */}
-          <button className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-700">View PaySlip</button> {/* Button */}
+          <a
+            className="z-10 rounded-full bg-teal-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
+            href={"/PaySlip/PayForm"}
+          >view pay Slip</a>
         </div>
       </div>
     </div>
+    {/* end of last Processed Salary */}
     </>
   );
 };
