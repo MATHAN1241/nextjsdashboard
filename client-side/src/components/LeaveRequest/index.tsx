@@ -1,5 +1,7 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { Employee } from "@/types/employee";
+import { LeaveRequest } from "@/types/leaveRequest";
 //import { LeaveRequest } from "@/types/leaveRequest";
 import axios from "axios";
 import Image from "next/image";
@@ -28,7 +30,7 @@ import { useEffect, useState } from "react";
 // ];
 
 const LeaveRequest = () => {
-  const[req,setRequests]=useState('');
+  const[req,setRequests]=useState<LeaveRequest[]>([]);
 const[rmes,setMessage]=useState('');
 
   useEffect(() => {

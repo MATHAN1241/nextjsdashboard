@@ -171,7 +171,7 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
           <form action="#" onSubmit={handleSubmit} >
         
             <div className="p-6.5">
-            {<p className="text-pink-500">{error}</p>}
+          
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Employee ID <span className="text-meta-1">*</span>
@@ -216,6 +216,7 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
                   />
                 </div>
               </div>
+
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="w-full xl:w-1/2">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
@@ -230,6 +231,7 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
                     placeholder="Enter your email address"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
+                    {<p className="text-pink-500">{error}</p>}
                 </div>
                 <div className="w-full xl:w-1/2">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">

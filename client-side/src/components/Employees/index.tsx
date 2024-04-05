@@ -162,9 +162,7 @@ const Employees  : React.FC = () => {
                 </th>
               </tr>
             </thead>
-          
             <tbody>
-             
               {employees.map((employee, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">

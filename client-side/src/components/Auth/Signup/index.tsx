@@ -15,7 +15,7 @@ const SignUp: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState<{ [key: string]: string }>({});
   const [error1, setError1] = useState("");
 const router=useRouter();
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -68,42 +68,69 @@ const router=useRouter();
 
   // Check if the password meets the criteri
     const userData = { name, email, password, confirmPassword };
-    const uppercaseRegex = /[A-Z]/;
-    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    // const uppercaseRegex = /[A-Z]/;
+    // const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
    
     try {
-      if (
+      // if (
     
-        password.length < 2 ||  // Minimum length requirement
-        name.length < 2 ||  // At least one uppercase letter
-        email.length< 2  || confirmPassword.length<2 // At least one symbol
-      ) {
-        setError("*Fill in the Form" );
+      //   password.length < 2 ||  // Minimum length requirement
+      //   name.length < 2 ||  // At least one uppercase letter
+      //   email.length< 2  || confirmPassword.length<2 // At least one symbol
+      // ) {
+      //   setError("*Fill in the Form" );
      
-      }  
-      else if (
-        password.length < 8 ||  // Minimum length requirement
-        !uppercaseRegex.test(password) ||  // At least one uppercase letter
-        !symbolRegex.test(password)  // At least one symbol
-      ) {
-        setError("*Password only One upper Case and One sympol and 8 characters" );
+      // }  
+      // else if (
+      //   password.length < 8 ||  // Minimum length requirement
+      //   !uppercaseRegex.test(password) ||  // At least one uppercase letter
+      //   !symbolRegex.test(password)  // At least one symbol
+      // ) {
+      //   setError("*Password only One upper Case and One sympol and 8 characters" );
       
-      }  
+      // }  
       
-      else if (password !== confirmPassword) {
-          setError("*Passwords do not match" );
+      // else if (password !== confirmPassword) {
+      //     setError("*Passwords do not match" );
           
-      }
-      else{
-          setError('');
+      // }
+      // else{
+      //     setError('');
          
-      }
+      // }
       const response = await axios.post('http://localhost:5000/api/auth/signup', userData);
       router.push('/auth/signin')
 
       console.log(response.data);
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error:', error);
+    //  if (error.response && error.response.status === 400) {
+    //   setError(error.response.data.errors || [{ message: error.response.data.message }]);
+    // } else {
+    //   setError();
+    // }
+    // if (error.response && error.response.status === 400) {
+    //   setError(error.response.data.errors.reduce((acc, err) => {
+    //     acc[err.param] = err.msg;
+    //     return acc;
+    //   }, {}));
+    // } else {
+    //   console.error('Server error:', error);
+    //   setError({ 'Server error' });
+    // }
+    if (error.response && error.response.status === 400) {
+      const errorData = error.response.data;
+      if (errorData && errorData.errors) {
+        const errorMessages: { [key: string]: string } = {};
+        errorData.errors.forEach((err: { param: string; msg: string }) => {
+          errorMessages[err.param] = err.msg;
+        });
+        setError(errorMessages);
+      }
+    } else {
+      console.error('Server error:', error);
+      setError({ server: 'Server error' });
+    }
     }
   
    
@@ -292,7 +319,8 @@ const router=useRouter();
             </h2>
            
               <form onSubmit={handleSubmit}>
-              {error && <p className="text-pink-500">{error}</p>}
+             {/* {error && <p className="text-pink-500">{error}</p>} */}
+              {error.server && <p>{error.server}</p>}
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -329,6 +357,7 @@ const router=useRouter();
                     </span>
       
                   </div>
+                   {error.name && <span>{error.name}</span>}
                 </div>
 
                 <div className="mb-4">
@@ -362,6 +391,7 @@ const router=useRouter();
                       </svg>
                     </span>
                   </div>
+                      {error.email && <span>{error.email}</span>}
                 </div>
                
                 <div className="mb-4">
@@ -398,7 +428,9 @@ const router=useRouter();
                         </g>
                       </svg>
                     </span>
+                    
                   </div>
+                  {error.password && <span>{error.password}</span>}
                 </div>
 
                 <div className="mb-6">
@@ -436,6 +468,7 @@ const router=useRouter();
                       </svg>
                     </span>
                   </div>
+                  {error.confirmPassword && <span>{error.confirmPassword}</span>}
                 </div>
                 
                 <div className="mb-5">
