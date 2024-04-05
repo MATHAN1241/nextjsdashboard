@@ -1,105 +1,30 @@
-"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 // import { Employee } from "@/types/employee";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-//import router, { Router, useRouter } from "next/router";
-import {useRouter} from "next/navigation";
-import { useEffect, useState } from "react";
-import EmployeeEdit from "./EmployeeEdit";
 
+const employeeData: Employee[] = [
+  {
+    DP: "/images/user/user-01.png",
+    employeeID: "E001",
+    employeeName: "John Doe",
+    contactNo: "+1234567890",
+    role: "Manager",
+    salary: 50000,
+  },
+  {
+    DP: "/images/user/user-02.png",
+    employeeID: "E002",
+    employeeName: "Jane Smith",
+    contactNo: "+9876543210",
+    role: "Developer",
+    salary: 40000,
+  },
+  // Add more employee objects as needed
+];
 
-interface Employee {
-  _id: string;
-  employeeId: string;
-  firstName: string;
-  lastName: string;
-  email:string;
-  contactNo: string;
-  employeeRole: string;
-  employeeSalary: string;
-  imagePath: string;
-}
-// const employeeData: Employee[] = [
-//   {
-//     DP: "/images/user/user-01.png",
-//     employeeID: "E001",
-//     employeeName: "John Doe",
-//     contactNo: "+1234567890",
-//     role: "Manager",
-//     salary: 50000,
-//   },
-//   {
-//     DP: "/images/user/user-02.png",
-//     employeeID: "E002",
-//     employeeName: "Jane Smith",
-//     contactNo: "+9876543210",
-//     role: "Developer",
-//     salary: 40000,
-//   },
-//   // Add more employee objects as needed
-// ];
-
-const Employees  : React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
-        setEmployees(response.data);
-      } catch (error) {
-        console.error('Error fetching employees:', error);
-      }
-    };
-
-    fetchEmployees();
-  }, []);
-  const router=useRouter();
-  
-  const handleEdit = async (employee: Employee) => {
-    
-    // try {
-      // Make API call to update employee data
-      // router.push('employees/add-employees')
-      //const response = await axios.get(`http://localhost:5000/api/employees/${employee._id}`);
-      // If API call is successful, update the state with the updated employee data
-       //setEmployees(response.data);
-       router.push(`/employees/edit-employees?_id=${employee._id}`);
-       //console.log(response.data);
-      
-       
-      // setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === employee._id ? response.data : emp)));
-      // console.log('Employee updated successfully:', response.data);
-    // } catch (error) {
-    //   console.error('Error updating employee:', error);
-    // }
-    // Implement edit functionality
-  };
-  // const handleEdit = (employee: Employee) => {
-  //   setSelectedEmployee(employee);
-  // };
-
-  // const handleUpdateEmployee = (updatedEmployee: Employee) => {
-  //   setEmployees(prevEmployees => prevEmployees.map(emp => (emp._id === updatedEmployee._id ? updatedEmployee : emp)));
-  //   setSelectedEmployee(null); // Close the form after updating
-  // };
-  const handleDelete = async (id: string) => {
-    // Implement delete functionality
-    try {
-      const response = await axios.delete(`http://localhost:5000/api/employees/${id}`);
-      if (response.status === 200) {
-        // Remove the deleted employee from the state
-        setEmployees(employees.filter(employee => employee._id !== id));
-        console.log('Employee deleted successfully:', response.data);
-      } else {
-        console.error('Failed to delete employee:', response.data);
-      }
-    } catch (error) {
-      console.error('Error deleting employee:', error);
-    }
-  };
+const Employees = () => {
   return (
     <>
       <Breadcrumb pageName="Employees" />
@@ -238,10 +163,10 @@ const Employees  : React.FC = () => {
                         </svg>    
                         {/* </Link>      */}
                       </button>
-                      {/* </Link>    */}
+                        </Link>
                       
 
-                      <button className="hover:text-primary" onClick={()=>handleDelete(employee._id)}>
+                      <button className="hover:text-primary">
                         <svg
                           className="fill-current"
                           width="18"
@@ -267,7 +192,37 @@ const Employees  : React.FC = () => {
                             fill=""
                           />
                         </svg>
-                      </button>
+        </button>
+      </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg shadow-lg">
+            <p className="text-lg mb-4">Are you sure you want to delete?</p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowModal(false)}
+                className="mr-2 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              >
+                No
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+ 
+
+
+                      
+                      {/* end of delete button */}
+
+
                       {/* DOWNLOAD  BUTTON */}
                       {/* <button className="hover:text-primary">
                       <svg

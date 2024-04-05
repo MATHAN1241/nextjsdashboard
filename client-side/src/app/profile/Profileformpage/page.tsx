@@ -1,8 +1,8 @@
 
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Profile from "@/components/Profile";
 
+import ProfileEmployees from "@/components/Profile/Profileform";
 
 export const metadata: Metadata = {
   title: "Lyzoo AI Attendance Dashboard",
@@ -12,10 +12,8 @@ export const metadata: Metadata = {
 const AttendancePage = () => {
   return (
     <DefaultLayout>
-          
 
-    <Profile />
-          
+<ProfileEmployees/>
     </DefaultLayout>
   );
 };
