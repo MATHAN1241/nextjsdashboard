@@ -1,30 +1,81 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { Employee } from "@/types/employee";
 // import { Employee } from "@/types/employee";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-const employeeData: Employee[] = [
-  {
-    DP: "/images/user/user-01.png",
-    employeeID: "E001",
-    employeeName: "John Doe",
-    contactNo: "+1234567890",
-    role: "Manager",
-    salary: 50000,
-  },
-  {
-    DP: "/images/user/user-02.png",
-    employeeID: "E002",
-    employeeName: "Jane Smith",
-    contactNo: "+9876543210",
-    role: "Developer",
-    salary: 40000,
-  },
-  // Add more employee objects as needed
-];
+// const employeeData: Employee[] = [
+//   {
+//     DP: "/images/user/user-01.png",
+//     employeeID: "E001",
+//     employeeName: "John Doe",
+//     contactNo: "+1234567890",
+//     role: "Manager",
+//     salary: 50000,
+//   },
+//   {
+//     DP: "/images/user/user-02.png",
+//     employeeID: "E002",
+//     employeeName: "Jane Smith",
+//     contactNo: "+9876543210",
+//     role: "Developer",
+//     salary: 40000,
+//   },
+//   // Add more employee objects as needed
+// ];
 
 const Employees = () => {
+  const[showModal,setShowModal]=useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+  const router=useRouter();
+  const handleEdit = async (employee:Employee) => {
+    try {
+      // Make a PUT request to update the employee record
+      const response = await axios.get(`http://localhost:5000/api/employees/${employee._id}`);
+        // Pass updated employee data here (e.g., firstName, lastName, role, etc.)
+        // Assuming you have a form to gather updated data, you can use that here
+        // For simplicity, let's say we want to update the role only
+        console.log(response.data);
+        router.push(`/employees/edit-employees?_id=${employee._id}`);
+        //_id=${employee._id} 
+        //router.push(`attendance/attendancedetailview?_id=${employee._id}`);
+      
+       
+      // Handle successful response (optional)
+     // console.log('Employee updated:', response.data);
+    } catch (error) {
+      console.error('Error updating employee:', error);
+    }
+  };
+  const handleDelete = async (_id:string) => {
+    try {
+      // Make a DELETE request to delete the employee record
+      await axios.delete(`http://localhost:5000/api/employees/${_id}`);
+     
+      // Handle successful deletion (optional)
+      console.log('Employee deleted sucess');
+      router.push(`/employees`);
+      //setShowModal(false);
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Employees" />
@@ -102,7 +153,7 @@ const Employees = () => {
                          //src={`public/images/${employee.imagePath}`}
                         width={60}
                         height={50}
-                        alt="Employee Display Picture"
+                        alt="http://ocalhost:5000/public/images/25.jpg"
                       />}
                     </div>
                   </td>
@@ -163,10 +214,10 @@ const Employees = () => {
                         </svg>    
                         {/* </Link>      */}
                       </button>
-                        </Link>
+                        {/* </Link> */}
                       
 
-                      <button className="hover:text-primary">
+                      <button className="hover:text-primary"   onClick={() => setShowModal(true)}>
                         <svg
                           className="fill-current"
                           width="18"
@@ -206,8 +257,10 @@ const Employees = () => {
                 No
               </button>
               <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                // onClick={() => setShowModal(false)}
+              //  onClick={() => handleDelete(employee._id)}
+              onClick={() => handleDelete(employee._id)}  
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Yes
               </button>
@@ -215,11 +268,7 @@ const Employees = () => {
           </div>
         </div>
       )}
-    </div>
- 
-
-
-                      
+    {/* </div> */}                      
                       {/* end of delete button */}
 
 
@@ -243,7 +292,7 @@ const Employees = () => {
                         />
                       </svg>
                     </button> */}
-                    </div>
+                    {/* </div> */}
                   </td>
                 </tr>
               ))}

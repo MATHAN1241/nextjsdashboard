@@ -14,7 +14,11 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [serverError, setServerError] = useState('');
   const [error, setError] = useState<{ [key: string]: string }>({});
   const [error1, setError1] = useState("");
 const router=useRouter();
@@ -68,36 +72,59 @@ const router=useRouter();
 
   // Check if the password meets the criteri
     const userData = { name, email, password, confirmPassword };
-    // const uppercaseRegex = /[A-Z]/;
-    // const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    const uppercaseRegex = /[A-Z]/;
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
    
     try {
-      // if (
+      if (
     
-      //   password.length < 2 ||  // Minimum length requirement
-      //   name.length < 2 ||  // At least one uppercase letter
-      //   email.length< 2  || confirmPassword.length<2 // At least one symbol
-      // ) {
-      //   setError("*Fill in the Form" );
-     
-      // }  
-      // else if (
-      //   password.length < 8 ||  // Minimum length requirement
-      //   !uppercaseRegex.test(password) ||  // At least one uppercase letter
-      //   !symbolRegex.test(password)  // At least one symbol
-      // ) {
-      //   setError("*Password only One upper Case and One sympol and 8 characters" );
+        !(password)||  // Minimum length requirement
+        !(name)||  // At least one uppercase letter
+        !(email)  || !(confirmPassword) // At least one symbol
+      ) {
+        if (
+    
+          !(password)||  // Minimum length requirement
+          !(name)||  // At least one uppercase letter
+          !(email)  || !(confirmPassword) // At least one symbol
+        ){
+        setServerError("*Fill in the Form" );
+        }else{
+          setServerError('');
+        }
+      }
       
-      // }  
+      else if(name.length<5){
+        if(name.length<5){setNameError('*Name with 5 characters')}
+        else{
+          setNameError('');
+        }
+      }
+      else if (
+        password.length < 8 ||  // Minimum length requirement
+        !uppercaseRegex.test(password) ||  // At least one uppercase letter
+        !symbolRegex.test(password)  // At least one symbol
+      ) {
+        if( password.length < 8 ||  // Minimum length requirement
+        !uppercaseRegex.test(password) ||  // At least one uppercase letter
+        !symbolRegex.test(password)){
+        setPasswordError("*Password only One upper Case and One sympol and 8 characters" );
+        }else{
+          setPasswordError('');
+        }
+      }  
       
-      // else if (password !== confirmPassword) {
-      //     setError("*Passwords do not match" );
-          
-      // }
-      // else{
-      //     setError('');
+      else if (password !== confirmPassword) {
+        if(password !== confirmPassword){
+          setConfirmPasswordError("*Passwords do not match" );
+        }else{
+          setConfirmPasswordError('');
+        }
+      }
+      else{
+          setServerError('');
          
-      // }
+      }
       const response = await axios.post('http://localhost:5000/api/auth/signup', userData);
       router.push('/auth/signin')
 
@@ -121,16 +148,64 @@ const router=useRouter();
     if (error.response && error.response.status === 400) {
       const errorData = error.response.data;
       if (errorData && errorData.errors) {
-        const errorMessages: { [key: string]: string } = {};
+       // const errorMessages: { [key: string]: string } = {};
         errorData.errors.forEach((err: { param: string; msg: string }) => {
-          errorMessages[err.param] = err.msg;
+         // errorMessages[err.param] = err.msg;
+         switch (err.param) {
+          case 'name':
+            console.log(err.msg);
+            setNameError(err.msg);
+            break;
+          case 'email':
+            setEmailError(err.msg);
+            break;
+          case 'password':
+            setPasswordError(err.msg);
+            break;
+          case 'confirmPassword':
+            setConfirmPasswordError(err.msg);
+            break;
+          default:
+            break;
+        }
         });
-        setError(errorMessages);
+        //setError(errorMessages);
+      }
+      else if (errorData && errorData.error === 'Email already exists') {
+        setEmailError('*Email already exists'); // Set specific error message
+      }
+      else if (errorData && errorData.error === 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character') {
+        setPasswordError( '*Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character confirm 8 charcters' );
+      }
+      else if (errorData && errorData.error === 'Passwords do not match') {
+        setPasswordError( 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character' );
       }
     } else {
       console.error('Server error:', error);
-      setError({ server: 'Server error' });
+     // setError({ server: 'Server error' });
+     setServerError('Server error');
     }
+  //   if (error.response && error.response.data.errors && Array.isArray(error.response.data)) {
+  //    console.log(error.response);
+  //     error.response.data.errors.forEach((err: { param: any; msg: React.SetStateAction<string>; }) => {
+  //       switch (err.param) {
+  //         case 'name':
+  //           setNameError("Name must be at least 5 characters");
+  //           break;
+  //         case 'email':
+  //           setEmailError(err.msg);
+  //           break;
+  //         case 'password':
+  //           setPasswordError(err.msg);
+  //           break;
+  //         default:
+  //           setServerError('*Server error');
+  //       }
+  //     });
+  //  }// else {
+    //   ('Server error');
+    // }
+  
     }
   
    
@@ -320,7 +395,8 @@ const router=useRouter();
            
               <form onSubmit={handleSubmit}>
              {/* {error && <p className="text-pink-500">{error}</p>} */}
-              {error.server && <p>{error.server}</p>}
+              {/* {error.server && <p>{error.server}</p>} */}
+              {serverError && <p>{serverError}</p>}
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -357,8 +433,9 @@ const router=useRouter();
                     </span>
       
                   </div>
-                   {error.name && <span>{error.name}</span>}
+                  {nameError && <p>{nameError}</p>}
                 </div>
+                {/* {error.name && <span>{error.name}</span>} */}
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -391,7 +468,8 @@ const router=useRouter();
                       </svg>
                     </span>
                   </div>
-                      {error.email && <span>{error.email}</span>}
+                      {/* {error.email && <span>{error.email}</span>} */}
+                      {emailError && <p>{emailError}</p>}
                 </div>
                
                 <div className="mb-4">
@@ -430,7 +508,8 @@ const router=useRouter();
                     </span>
                     
                   </div>
-                  {error.password && <span>{error.password}</span>}
+                  {/* {error.password && <span>{error.password}</span>} */}
+                  {passwordError && <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character</p>}
                 </div>
 
                 <div className="mb-6">
@@ -468,7 +547,8 @@ const router=useRouter();
                       </svg>
                     </span>
                   </div>
-                  {error.confirmPassword && <span>{error.confirmPassword}</span>}
+                  {/* {error.confirmPassword && <span>{error.confirmPassword}</span>} */}
+                  {confirmPasswordError && <p>{confirmPasswordError}</p>}
                 </div>
                 
                 <div className="mb-5">

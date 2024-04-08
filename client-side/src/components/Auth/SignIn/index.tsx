@@ -17,13 +17,13 @@ const SignIn: React.FC = () => {
     e.preventDefault();   
     try {
       const formData={email,password};
-      if(!email || !password){
-        setError("*Fill in the Form");
+      // if(!email || !password){
+      //   setError("*Fill in the Form");
        
-      }else{
-        setError('');
+      // }else{
+      //   setError('');
         
-      }
+      // }
       
       // if((email==='admin@gmail.com')&& (password ==='Admin@123')){
       //     router.push('/dashboard');
@@ -33,7 +33,7 @@ const SignIn: React.FC = () => {
       console.log(router);
       router.push('/dashboard');
       // Redirect or perform actions after successful login
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error:', error);
       // if (error === 'Email error') {
       //   window.alert('Invalid email format. Please enter a valid email.');
@@ -45,6 +45,11 @@ const SignIn: React.FC = () => {
       //   window.alert('Failed to login.');
       // }
 
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
     }
     
   };

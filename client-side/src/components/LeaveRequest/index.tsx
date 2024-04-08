@@ -49,6 +49,7 @@ const[rmes,setMessage]=useState('');
     try {
       await axios.post(`http://localhost:5000/api/requests/${id}/approve`);
       setMessage('Request approved successfully');
+      console.log("approved succeessfully");
     } catch (error) {
       console.error('Error approving request:', error);
       setMessage('Error approving request');

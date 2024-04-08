@@ -1,4 +1,8 @@
-import React from 'react';
+"use client";
+import { Employee } from '@/types/employee';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import html2pdf from 'html2pdf.js';
 
 const Payslip = () => {
 
@@ -19,21 +23,65 @@ const Payslip = () => {
     ytdDeductions: 250
   };
 
+  const queryString = window.location.search;
 
+  // Parse the query string to get the URLSearchParams object
+  const params = new URLSearchParams(queryString);
+  const [id, setId] = useState(''); 
+  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
   const grossWages = employee.basic + employee.houseRentAllowance + employee.fixedAllowance;
   const grossDeduction = employee.epf + employee.pt;
-
-  return (
-    <div className="container mx-auto p-4 ml-8">
+ useEffect(() => {
+  const _id = new URLSearchParams( window.location.search).get('_id');
+  setId(_id??"");
+  const fetchEmployeeData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/employees/${_id}`);
+      setEmployeeData(response.data);
+  
     
+    } catch (error) {
+      console.error('Error fetching employee data:', error);
+    }
+  };
+
+  fetchEmployeeData();
+}, []); 
+const handleDownload = () => {
+  const element = document.getElementById('payslipContent');
+
+  // // Specify the filename for the downloaded PDF
+  // const fileName = 'payslip.pdf';
+
+  // html2pdf()
+  //   .from(element)
+  //   // Set the filename for the downloaded PDF
+  //   .filename(fileName)
+  //   .save();
+  if (element) {
+    const options = {
+      filename: 'payslip.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    };
+
+    html2pdf().set(options).from(element).save();
+  }
+};
+  return (
+    
+    <div className="container mx-auto p-4 ml-8"> 
+
       <h2 className="text-2xl font-bold mb-4">Employee Pay Summary</h2>
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+      {employeeData &&( 
+      <div  id="payslipContent" className="bg-white rounded-lg shadow-lg p-6 mb-6">
       <h1 className="text-3xl font-bold mb-8">LYZOO TECHNOLOGIES PRIVATE LIMITED</h1>
       <hr></hr>
         <h2 className="text-lg font-semibold mb-4">Employee Details</h2>
         <div className="mb-4">
-          <p><span className="font-semibold">Employee Name:</span> {employee.name}</p>
-          <p><span className="font-semibold">Designation:</span> {employee.designation}</p>
+          <p><span className="font-semibold">Employee Name:</span> {employeeData.firstName}</p>
+          <p><span className="font-semibold">Designation:</span> {employeeData.employeeRole}</p>
           <p><span className="font-semibold">Date of Joining:</span> {employee.dateOfJoining}</p>
           <p><span className="font-semibold">Bank Name:</span> {employee.bankName}</p>
           <p><span className="font-semibold">Pay Period:</span> {employee.payPeriod}</p>
@@ -72,17 +120,19 @@ const Payslip = () => {
           </div>
         </div>
       </div>
-
+  )}
       <div className="flex justify-end space-x-4">
       <button
           
           className="bg-violet-500 text-white py-2 px-4 rounded-md hover:bg-pink-700"
-        >
+      onClick={handleDownload}  >
           Download
         </button>
       </div>
-    </div>
-  );
+  
+      </div>
+
+    );
 };
 
 export default Payslip;
