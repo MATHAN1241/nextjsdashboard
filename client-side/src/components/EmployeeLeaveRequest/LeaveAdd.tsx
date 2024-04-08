@@ -70,19 +70,18 @@ const AddEmployees = () => {
                     From Date <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="Enter from date"
+                    type="Date"
+                    placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                   
-                 />
+                  />
                 </div>
                 <div className="w-full xl:w-1/2">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   To Date <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="text"
-                    placeholder="Enter to date"
+                    type="Date"
+                    placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
                 </div>
