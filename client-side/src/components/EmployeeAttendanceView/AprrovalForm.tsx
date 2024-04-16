@@ -95,7 +95,7 @@ const Approval= () => {
                          <input type="file" id="attachment" name="attachment"  className="w-full px-4 py-2 border rounded-md" />
                 </div>
                 <br/>
-                <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Cancel Request</button>
+                <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Submit</button>
 
 </div>
 
