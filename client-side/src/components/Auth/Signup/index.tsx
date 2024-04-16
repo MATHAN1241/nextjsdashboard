@@ -1,14 +1,240 @@
 "use client"
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-
+// const [userData, setUserData] = useState(null);
+// const [error, setError] = useState(null);
 const SignUp: React.FC = () => {
-  return (
+  //const [userData,setUserData]=useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+  const [serverError, setServerError] = useState('');
+  const [error, setError] = useState<{ [key: string]: string }>({});
+  const [error1, setError1] = useState("");
+const router=useRouter();
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await fetch("/signup", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       },
+  //       body: JSON.stringify(userData)
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorMessage = await response.text();
+  //       throw new Error(errorMessage);
+  //     }
+
+  //     const data = await response.json();
+  //     setUserData(data);
+  //   }catch (error: unknown) {
+  //     setError((error as Error).message);
+  // }
+  // };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+  //   e.preventDefault();
+  //   const userData = { name, email, password, confirmPassword };
+  //   try {
+  //     const response = await axios.post("/api/auth/signup", userData, {
+  //       headers: {
+  //         "Content-Type": "application/json"
+  //       }
+  //     });
+  
+  //     if (response.status !== 200) {
+  //       throw new Error(response.statusText);
+  //     }
+  //     // console.log(response.data);
+  //    console.log(userData);
+  //     console.log("succesfully");
+    
+  //   } catch (error: unknown) {
+  //     setError((error as Error).message);
+  //   }
+  // };
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     
 
+  // Check if the password meets the criteri
+    const userData = { name, email, password, confirmPassword };
+    const uppercaseRegex = /[A-Z]/;
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+   
+    try {
+      if (
+    
+        !(password)||  // Minimum length requirement
+        !(name)||  // At least one uppercase letter
+        !(email)  || !(confirmPassword) // At least one symbol
+      ) {
+        if (
+    
+          !(password)||  // Minimum length requirement
+          !(name)||  // At least one uppercase letter
+          !(email)  || !(confirmPassword) // At least one symbol
+        ){
+        setServerError("*Fill in the Form" );
+        }else{
+          setServerError('');
+        }
+      }
+      
+      else if(name.length<5){
+        if(name.length<5){setNameError('*Name with 5 characters')}
+        else{
+          setNameError('');
+        }
+      }
+      else if (
+        password.length < 8 ||  // Minimum length requirement
+        !uppercaseRegex.test(password) ||  // At least one uppercase letter
+        !symbolRegex.test(password)  // At least one symbol
+      ) {
+        if( password.length < 8 ||  // Minimum length requirement
+        !uppercaseRegex.test(password) ||  // At least one uppercase letter
+        !symbolRegex.test(password)){
+        setPasswordError("*Password only One upper Case and One sympol and 8 characters" );
+        }else{
+          setPasswordError('');
+        }
+      }  
+      
+      else if (password !== confirmPassword) {
+        if(password !== confirmPassword){
+          setConfirmPasswordError("*Passwords do not match" );
+        }else{
+          setConfirmPasswordError('');
+        }
+      }
+      else{
+          setServerError('');
+         
+      }
+      const response = await axios.post('http://localhost:5000/api/auth/signup', userData);
+      router.push('/auth/signin')
+
+      console.log(response.data);
+    } catch (error:any) {
+      console.error('Error:', error);
+    //  if (error.response && error.response.status === 400) {
+    //   setError(error.response.data.errors || [{ message: error.response.data.message }]);
+    // } else {
+    //   setError();
+    // }
+    // if (error.response && error.response.status === 400) {
+    //   setError(error.response.data.errors.reduce((acc, err) => {
+    //     acc[err.param] = err.msg;
+    //     return acc;
+    //   }, {}));
+    // } else {
+    //   console.error('Server error:', error);
+    //   setError({ 'Server error' });
+    // }
+    if (error.response && error.response.status === 400) {
+      const errorData = error.response.data;
+      if (errorData && errorData.errors) {
+       // const errorMessages: { [key: string]: string } = {};
+        errorData.errors.forEach((err: { param: string; msg: string }) => {
+         // errorMessages[err.param] = err.msg;
+         switch (err.param) {
+          case 'name':
+            console.log(err.msg);
+            setNameError(err.msg);
+            break;
+          case 'email':
+            setEmailError(err.msg);
+            break;
+          case 'password':
+            setPasswordError(err.msg);
+            break;
+          case 'confirmPassword':
+            setConfirmPasswordError(err.msg);
+            break;
+          default:
+            break;
+        }
+        });
+        //setError(errorMessages);
+      }
+      else if (errorData && errorData.error === 'Email already exists') {
+        setEmailError('*Email already exists'); // Set specific error message
+      }
+      else if (errorData && errorData.error === 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character') {
+        setPasswordError( '*Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character confirm 8 charcters' );
+      }
+      else if (errorData && errorData.error === 'Passwords do not match') {
+        setPasswordError( 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character' );
+      }
+    } else {
+      console.error('Server error:', error);
+     // setError({ server: 'Server error' });
+     setServerError('Server error');
+    }
+  //   if (error.response && error.response.data.errors && Array.isArray(error.response.data)) {
+  //    console.log(error.response);
+  //     error.response.data.errors.forEach((err: { param: any; msg: React.SetStateAction<string>; }) => {
+  //       switch (err.param) {
+  //         case 'name':
+  //           setNameError("Name must be at least 5 characters");
+  //           break;
+  //         case 'email':
+  //           setEmailError(err.msg);
+  //           break;
+  //         case 'password':
+  //           setPasswordError(err.msg);
+  //           break;
+  //         default:
+  //           setServerError('*Server error');
+  //       }
+  //     });
+  //  }// else {
+    //   ('Server error');
+    // }
+  
+    }
+  
+   
+  };
+//   try {
+//     const response = await fetch('/auth/signup', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(userData) 
+//     });
+//     console.log("sucessfully");
+//     const data = await response.json();
+//     setMessage(data.message); // Set the response message
+//   } catch (error) {
+//     console.error('Error:', error);
+//   }
+// };
+  // const handleChange = (e: { target: { name: any; value: any; }; }) => {
+  //   const { name, value } = e.target;
+  //   setUserData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value
+  //   }));
+  // };
+
+ 
+  return (
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -166,8 +392,11 @@ const SignUp: React.FC = () => {
             <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
               Sign Up to <span className="text-orange-500">Lyzoo Attendance</span> 
             </h2>
-
-              <form>
+           
+              <form onSubmit={handleSubmit}>
+             {/* {error && <p className="text-pink-500">{error}</p>} */}
+              {/* {error.server && <p>{error.server}</p>} */}
+              {serverError && <p>{serverError}</p>}
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -175,10 +404,12 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="text"
+                      value={name}
+                      onChange={(e)=>setName(e.target.value)}
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    />
-
+                     />
+       
                     <span className="absolute right-4 top-4">
                       <svg
                         className="fill-current"
@@ -200,8 +431,11 @@ const SignUp: React.FC = () => {
                         </g>
                       </svg>
                     </span>
+      
                   </div>
+                  {nameError && <p>{nameError}</p>}
                 </div>
+                {/* {error.name && <span>{error.name}</span>} */}
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -210,6 +444,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e)=>setEmail(e.target.value)}
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -232,8 +468,10 @@ const SignUp: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                      {/* {error.email && <span>{error.email}</span>} */}
+                      {emailError && <p>{emailError}</p>}
                 </div>
-
+               
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Password
@@ -241,6 +479,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      value={password}
+                      onChange={(e)=>setPassword(e.target.value)}
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -266,7 +506,10 @@ const SignUp: React.FC = () => {
                         </g>
                       </svg>
                     </span>
+                    
                   </div>
+                  {/* {error.password && <span>{error.password}</span>} */}
+                  {passwordError && <p>Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character</p>}
                 </div>
 
                 <div className="mb-6">
@@ -276,6 +519,8 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="password"
+                      value={confirmPassword}
+                      onChange={(e)=>setConfirmPassword(e.target.value)}
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -302,12 +547,14 @@ const SignUp: React.FC = () => {
                       </svg>
                     </span>
                   </div>
+                  {/* {error.confirmPassword && <span>{error.confirmPassword}</span>} */}
+                  {confirmPasswordError && <p>{confirmPasswordError}</p>}
                 </div>
-
+                
                 <div className="mb-5">
                 <button
                   className=" overflow-hidden relative w-full p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
-                >
+               >
                   Sign Up
                   <span
                     className="absolute w-full h-32 -top-8 -left-2 bg-green-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"

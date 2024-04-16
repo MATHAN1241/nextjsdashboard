@@ -1,8 +1,18 @@
 "use client";
-import React from "react";
+import { Employee } from "@/types/employee";
+import React, { useEffect, useState } from "react";
 
 const Details: React.FC = () => {
+  const queryString = window.location.search;
 
+  // Parse the query string to get the URLSearchParams object
+  const params = new URLSearchParams(queryString);
+  const [id, setId] = useState(''); 
+  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
+  useEffect(() => {
+    const _id = new URLSearchParams( window.location.search).get('_id');
+    setId(_id??"");
+  },[]);
   return (
     <>
       {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5"> */}
@@ -114,7 +124,7 @@ const Details: React.FC = () => {
           <p className="text-start mb-2">Deduction:****</p> {/* Text line */}
           <a
             className="z-10 rounded-full bg-teal-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-violet-500"
-            href={"/PaySlip/PayForm"}
+            href={`/PaySlip/PayForm?_id=${id}`}
           >view pay Slip</a>
         </div>
       </div>

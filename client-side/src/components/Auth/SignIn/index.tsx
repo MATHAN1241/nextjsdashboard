@@ -1,10 +1,59 @@
 "use client"
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+
 
 const SignIn: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const[error,setError]=useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();   
+    try {
+      const formData={email,password};
+      // if(!email || !password){
+      //   setError("*Fill in the Form");
+       
+      // }else{
+      //   setError('');
+        
+      // }
+      
+      // if((email==='admin@gmail.com')&& (password ==='Admin@123')){
+      //     router.push('/dashboard');
+      // }
+      const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      console.log(response.data);
+      console.log(router);
+      router.push('/dashboard');
+      // Redirect or perform actions after successful login
+    } catch (error:any) {
+      console.error('Error:', error);
+      // if (error === 'Email error') {
+      //   window.alert('Invalid email format. Please enter a valid email.');
+      // } else if (error === 'Invalid password') {
+      //   window.alert('Invalid password format. Please enter a valid password.');
+      // } else if (error === 'User not found') {
+      //   window.alert('User not found. Please check your credentials and try again.');
+      // } else {
+      //   window.alert('Failed to login.');
+      // }
+
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    }
+    
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex flex-wrap items-center">
@@ -162,7 +211,8 @@ const SignIn: React.FC = () => {
               Sign In to <span className="text-orange-500">Lyzoo Attendance</span> 
             </h2>
 
-            <form>
+            <form onSubmit={handleSubmit}>
+            {error && <p className="text-pink-500 decoration-4">{error}</p>}
               <div className="mb-4">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
                   Email
@@ -170,6 +220,8 @@ const SignIn: React.FC = () => {
                 <div className="relative">
                   <input
                     type="email"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
                     placeholder="Enter your email"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
@@ -201,6 +253,8 @@ const SignIn: React.FC = () => {
                 <div className="relative">
                   <input
                     type="password"
+                    value={password}
+                    onChange={(e)=>setPassword(e.target.value)}
                     placeholder="6+ Characters, 1 Capital letter"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
@@ -230,10 +284,10 @@ const SignIn: React.FC = () => {
               </div>
 
               <div className="mb-15">
-              <Link href="/dashboard">
+              {/* <Link href="/dashboard"> */}
               <button
                   className=" overflow-hidden relative w-full p-2 h-12 bg-black text-white border-none rounded-md text-xl font-bold cursor-pointer relative z-10 group"
-                >
+                 >
                   Sign In
                   <span
                     className="absolute w-full h-32 -top-8 -left-2 bg-green-200 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-bottom"
@@ -248,7 +302,7 @@ const SignIn: React.FC = () => {
                     className="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-2.5 text-xl z-10"
                     >➡ Ready to Sign In!</span>
               </button>
-              </Link>
+              {/* </Link> */}
               </div>
               {/* SIGN IN WITH GOOGLE  */}
               {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">

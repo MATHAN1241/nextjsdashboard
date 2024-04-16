@@ -1,30 +1,70 @@
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import { Employee } from "@/types/employee";
 import { LeaveRequest } from "@/types/leaveRequest";
+//import { LeaveRequest } from "@/types/leaveRequest";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 
-const employeeData: LeaveRequest[] = [
-  {
+// const employeeData: LeaveRequest[] = [
+//   {
    
-    ID: "1111",
-    employeeName: "John Doe",
-    fromDate: "02/03/2024",
-    toDate: "01/03/2024",
-    reason: "sick leave"
+//     employeeId: "1111",
+//     firstName: "John Doe",
+//     fromDate: "02/03/2024",
+//     toDate: "01/03/2024",
+//     reason: "sick leave"
    
-  },
-  {
-    ID: "1112",
-    employeeName: "Curie",
-    fromDate: "02/04/2024",
-    toDate: "01/04/2024",
-    reason: "injury"
-  },
-  // Add more employee objects as needed
-];
+//   },
+//   {
+//      employeeId: "1112",
+//      firstName: "Curie",
+//     fromDate: "02/04/2024",
+//     toDate: "01/04/2024",
+//     reason: "injury"
+//   },
+//   // Add more employee objects as needed
+// ];
 
 const LeaveRequest = () => {
+  const[req,setRequests]=useState<LeaveRequest[]>([]);
+const[rmes,setMessage]=useState('');
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/requests');
+        setRequests(response.data);
+      } catch (error) {
+        console.error('Error fetching requests:', error);
+      }
+    };
+    fetchRequests();
+  }, []);
+
+  const handleApprove = async (id: string) => {
+    try {
+      await axios.post(`http://localhost:5000/api/requests/${id}/approve`);
+      setMessage('Request approved successfully');
+      console.log("approved succeessfully");
+    } catch (error) {
+      console.error('Error approving request:', error);
+      setMessage('Error approving request');
+    }
+  };
+
+  const handleReject = async (id: string) => {
+    try {
+      await axios.post(`http://localhost:5000/api/requests/${id}/reject`);
+      setMessage('Request rejected successfully');
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+      setMessage('Error rejecting request');
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Leave Request" />
@@ -55,39 +95,39 @@ const LeaveRequest = () => {
               </tr>
             </thead>
             <tbody>
-              {employeeData.map((leave, key) => (
+              {req.map((employee, key) => (
                 <tr key={key}>
                   
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {leave.ID}
+                      {employee.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {leave.employeeName}
+                      {employee.firstName}
                     </h5>
                   </td>
                  
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {leave.fromDate}
+                      {employee.fromDate}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {leave.toDate}
+                      {employee.toDate}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {leave.reason}
+                      {employee.reason}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                        <Link href={'/employees/edit-employees'}>
-                        <button className="hover:text-primary">
+                        {/* <Link href={'/employees/edit-employees'}> */}
+                        <button className="hover:text-primary"  onClick={() => handleApprove(employee.employeeId)}>
                        
                        <svg
                             width="24"
@@ -108,10 +148,10 @@ const LeaveRequest = () => {
 
 
                       </button>
-                        </Link>
+                        {/* </Link> */}
                       
 
-                      <button className="hover:text-primary">
+                      <button className="hover:text-primary" onClick={() => handleReject(employee.employeeId)}>
                        
                         <svg
                             width="24"

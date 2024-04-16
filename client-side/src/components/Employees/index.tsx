@@ -1,34 +1,81 @@
-'use client'
+"use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Employee } from "@/types/employee";
+// import { Employee } from "@/types/employee";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
-
-const employeeData: Employee[] = [
-  {
-    DP: "/images/user/user-01.png",
-    employeeID: "E001",
-    employeeName: "John Doe",
-    contactNo: "+1234567890",
-    role: "Manager",
-    salary: 50000,
-  },
-  {
-    DP: "/images/user/user-02.png",
-    employeeID: "E002",
-    employeeName: "Jane Smith",
-    contactNo: "+9876543210",
-    role: "Developer",
-    salary: 40000,
-  },
-  // Add more employee objects as needed
-];
+// const employeeData: Employee[] = [
+//   {
+//     DP: "/images/user/user-01.png",
+//     employeeID: "E001",
+//     employeeName: "John Doe",
+//     contactNo: "+1234567890",
+//     role: "Manager",
+//     salary: 50000,
+//   },
+//   {
+//     DP: "/images/user/user-02.png",
+//     employeeID: "E002",
+//     employeeName: "Jane Smith",
+//     contactNo: "+9876543210",
+//     role: "Developer",
+//     salary: 40000,
+//   },
+//   // Add more employee objects as needed
+// ];
 
 const Employees = () => {
-  const [showModal, setShowModal] = useState(false);
+  const[showModal,setShowModal]=useState(false);
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get<Employee[]>('http://localhost:5000/api/employees');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
 
+    fetchEmployees();
+  }, []);
+  const router=useRouter();
+  const handleEdit = async (employee:Employee) => {
+    try {
+      // Make a PUT request to update the employee record
+      const response = await axios.get(`http://localhost:5000/api/employees/${employee._id}`);
+        // Pass updated employee data here (e.g., firstName, lastName, role, etc.)
+        // Assuming you have a form to gather updated data, you can use that here
+        // For simplicity, let's say we want to update the role only
+        console.log(response.data);
+        router.push(`/employees/edit-employees?_id=${employee._id}`);
+        //_id=${employee._id} 
+        //router.push(`attendance/attendancedetailview?_id=${employee._id}`);
+      
+       
+      // Handle successful response (optional)
+     // console.log('Employee updated:', response.data);
+    } catch (error) {
+      console.error('Error updating employee:', error);
+    }
+  };
+  const handleDelete = async (_id:string) => {
+    try {
+      // Make a DELETE request to delete the employee record
+      await axios.delete(`http://localhost:5000/api/employees/${_id}`);
+     
+      // Handle successful deletion (optional)
+      console.log('Employee deleted sucess');
+      router.push(`/employees`);
+      //setShowModal(false);
+    } catch (error) {
+      console.error('Error deleting employee:', error);
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Employees" />
@@ -69,7 +116,13 @@ const Employees = () => {
                   Employee ID
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Employee Name
+                  Employee First Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Employee Last Name
+                </th>
+                <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
+                  Email
                 </th>
                 <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                   Contact No
@@ -86,29 +139,44 @@ const Employees = () => {
               </tr>
             </thead>
             <tbody>
-              {employeeData.map((employee, key) => (
+              {employees.map((employee, key) => (
                 <tr key={key}>
                   <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                     <div className="h-12.5 w-15 rounded-md">
-                      <Image
-                        src={employee.DP}
+                    {employee.imagePath &&  <Image
+                         //src={''}
+                        // src={employee.imagePath}
+                       // loader={ {src: `http://localhost:5000/${employee.imagePath}`,} }
+                          src={`http://localhost:5000/${employee.imagePath}`}
+                        //src={`http://localhost:5000/public/images/25.jpg`}
+                        //src="http://localhost:5000/public/images/25.jpg"
+                         //src={`public/images/${employee.imagePath}`}
                         width={60}
                         height={50}
-                        alt="Employee Display Picture"
-                      />
+                        alt="http://ocalhost:5000/public/images/25.jpg"
+                      />}
                     </div>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {employee.employeeID}
+                      {employee.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div>
-                      <p className="text-black dark:text-white">{employee.employeeName}</p>
+                      <p className="text-black dark:text-white">{employee.firstName}</p>
                     </div>
                   </td>
-
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <div>
+                      <p className="text-black dark:text-white">{employee.lastName}</p>
+                    </div>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.email}
+                    </p>
+                  </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
                       {employee.contactNo}
@@ -116,18 +184,21 @@ const Employees = () => {
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {employee.role}
+                      {employee.employeeRole}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      ${employee.salary}
+                      ${employee.employeeSalary}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <div className="flex items-center space-x-3.5">
-                        <Link href={'/employees/edit-employees'}>
-                        <button className="hover:text-primary">
+                     {/* <Link href={'/employees/edit-employees'} > */}
+                        <button className="hover:text-primary"  onClick={() => handleEdit(employee)}  >
+                        {/* <Link href={'/employees/edit-employees'} > */}
+                        {/* <Link href={`/employees/edit-employees?_id=${employee._id}`}> */}
+                        {/* <Link href={`/employees/edit-employees/${employee._id}`}> */}
                         <svg
                           className="fill-current"
                           width="18"
@@ -140,20 +211,14 @@ const Employees = () => {
                             d="M13.9229 1.11914L16.8804 4.07665C17.0366 4.23289 17.0366 4.48914 16.8804 4.64539L15.2399 6.28589L11.7138 2.75977L13.3543 1.11914C13.5106 0.962891 13.7668 0.962891 13.9229 1.11914ZM10.1479 4.89414L14.5893 9.33552L9.45039 14.4744H5.00808V10.0321L10.1479 4.89414Z"
                             fill=""
                           />
-                        </svg>
+                        </svg>    
+                        {/* </Link>      */}
                       </button>
-                        </Link>
-                      {/* delete button */}
-     
+                        {/* </Link> */}
+                      
 
- 
-    <div className="relative">
-      <div className="relative inline-block">
-        <button
-          className="hover:text-primary"
-          onClick={() => setShowModal(true)}
-        >
-          <svg
+                      <button className="hover:text-primary"   onClick={() => setShowModal(true)}>
+                        <svg
                           className="fill-current"
                           width="18"
                           height="18"
@@ -192,8 +257,10 @@ const Employees = () => {
                 No
               </button>
               <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                // onClick={() => setShowModal(false)}
+              //  onClick={() => handleDelete(employee._id)}
+              onClick={() => handleDelete(employee._id)}  
+              className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 Yes
               </button>
@@ -201,11 +268,7 @@ const Employees = () => {
           </div>
         </div>
       )}
-    </div>
- 
-
-
-                      
+    {/* </div> */}                      
                       {/* end of delete button */}
 
 
@@ -229,12 +292,15 @@ const Employees = () => {
                         />
                       </svg>
                     </button> */}
-                    </div>
+                    {/* </div> */}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          {/* {selectedEmployee && (
+        <EmployeeEdit employee={selectedEmployee} onUpdate={handleUpdateEmployee} />
+      )} */}
         </div>
       </div>
     </>

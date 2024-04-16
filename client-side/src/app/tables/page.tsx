@@ -22,7 +22,6 @@ const TablesPage = () => {
         <TableOne />
         <TableTwo />
         <TableThree />
-        
       </div>
     </DefaultLayout>
   );
