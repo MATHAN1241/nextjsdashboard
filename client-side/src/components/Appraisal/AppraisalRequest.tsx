@@ -2,12 +2,18 @@
 import React, { useState } from 'react';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 
+interface Record {
+  startDate: string;
+  endDate: string;
+  reason: string;
+}
+
 const MyComponent = () => {
   const [showApprovalBox, setShowApprovalBox] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
-  const [records, setRecords] = useState([]);
+  const [records, setRecords] = useState<Record[]>([]);
 
   const handleApprovalLinkClick = (event: { preventDefault: () => void; }) => {
     event.preventDefault(); // Prevents the default behavior of the link
@@ -22,7 +28,8 @@ const MyComponent = () => {
   const handleSend = () => {
     // Only add record if all fields are filled
     if (startDate && endDate && reason) {
-      setRecords([...records, { startDate, endDate, reason }]);
+      const newRecord: Record = { startDate, endDate, reason };
+      setRecords([...records, newRecord]);
       // Clear input fields after adding record
       setStartDate('');
       setEndDate('');
