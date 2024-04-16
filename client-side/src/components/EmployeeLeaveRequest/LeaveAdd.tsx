@@ -1,7 +1,44 @@
+"use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const AddEmployees = () => {
+  const [employeeId, setEmployeeId] = useState('');
+const [firstName, setFirstName] = useState('');
+const [email, setEmail] = useState('');
+const [contactNo, setContactNo] = useState('');
+const [employeeRole, setEmployeeRole] = useState('');
+const [fromDate, setfromDate] = useState('');
+const [toDate, settoDate] = useState('');
+const [reason, setreason] = useState('');
+ const router=useRouter();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+   e.preventDefault();
+   
+   const formData={firstName,employeeId,email,contactNo,employeeRole,fromDate,toDate,reason};
+  
+
+   try {
+     
+      console.log(formData);
+      
+      const response = await axios.post('http://localhost:5000/api/leaverequests', formData);
+      router.push('/EmployeeLeaveRequest')
+      console.log(response.data);
+    //  router.push('/employees');
+    } catch (error:any) {
+      console.error('Error:', error);
+    //   if (error.response) {
+    //    // setError(error.response.data.message);
+    //   } else {
+    //  //   setError('Something went wrong. Please try again.');
+    //   }
+      
+    }
+  };
   return (
     <>
       <Breadcrumb pageName="Add Employees" />
@@ -13,7 +50,7 @@ const AddEmployees = () => {
               Leave Add Form
             </h3>
           </div>
-          <form action="">
+          <form action="" onSubmit={handleSubmit}>
             <div className="p-6.5">
                
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
@@ -23,20 +60,28 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="text"
+                    name="firstName"
+                    value={firstName}
+                    onChange={(e)=>setFirstName(e.target.value)}
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                    value="John" readOnly
+                    // value="John" readOnly
+                    placeholder="Enter Your Name"
                  />
                 </div>
 
                 <div className="w-full xl:w-1/2">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Last Name <span className="text-meta-1">*</span>
+                    EmployeeId <span className="text-meta-1">*</span>
                   </label>
                   <input
                     type="text"
-                   value="Doe"
+                  //  value="Doe"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                    readOnly
+                    // readOnly
+                    name="employeeId"
+                    value={employeeId}
+                    onChange={(e)=>setEmployeeId(e.target.value)}
+                    placeholder="Enter your Employee ID"
                   />
                 </div>
               </div>
@@ -46,9 +91,17 @@ const AddEmployees = () => {
                     Mobile No <span className="text-meta-1">*</span>
                   </label>
                   <input
-                    type="number"
+                    // type="number"
+                    type="tel" 
+                    pattern="[0-9]{10}" 
+                    
+                    name="contactNo"
+                    value={contactNo}
+                    onChange={(e)=>setContactNo(e.target.value)}
+                  
+                    placeholder="Enter your contact number"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                    value="9876543210" readOnly
+                    // value="9876543210" readOnly
                  />
                 </div>
 
@@ -58,9 +111,14 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="email"
-                   value="umar@gmail.com"
+                  // value="umar@gmail.com"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
-                    readOnly
+                   // readOnly
+                   name="email"
+                    value={email}
+                    onChange={(e)=>setEmail(e.target.value)}
+               
+                    placeholder="Enter your email address"
                   />
                 </div>
               </div>
@@ -71,6 +129,11 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="Date"
+                    name="fromDate"
+                    value={fromDate}
+                    onChange={(e)=>setfromDate(e.target.value)}
+               
+                   
                     placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -81,6 +144,11 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="Date"
+                    name="toDate"
+                    value={toDate}
+                    onChange={(e)=>settoDate(e.target.value)}
+               
+                   
                     placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -93,6 +161,11 @@ const AddEmployees = () => {
                   </label>
                   <input
                     type="text"
+                    name="employeeRole"
+                    value={employeeRole}
+                    onChange={(e)=>setEmployeeRole(e.target.value)}
+               
+                   
                     placeholder="Enter your employee role"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
@@ -102,7 +175,12 @@ const AddEmployees = () => {
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                    Reason <span className="text-meta-1">*</span>
                   </label>
-                  <textarea placeholder="enter your reson" 
+                  <textarea name="reason"
+                    value={reason}
+                    onChange={(e)=>setreason(e.target.value)}
+               
+                   
+                  placeholder="enter your reson" 
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000">
 
                   </textarea>
@@ -110,10 +188,11 @@ const AddEmployees = () => {
               </div>
 
               <div className="flex justify-between">
-  <Link
-    href="#"
+ <button className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10">
+   {/* <Link
+    href="/EmployeeLeaveRequest"
     className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
-  >
+  > */}
     <span>
     <svg
   className="fill-current "
@@ -133,13 +212,12 @@ const AddEmployees = () => {
 
     </span>
     Send Request
-  </Link>
-
-  {/* Cancel SVG Link */}
-  <Link
-    href="#"
+  {/* </Link> */}
+   </button>
+   <button>
+    <Link 
     className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10 "
-  >
+    href="/EmployeeLeaveRequest">
     <span>
       <svg
         width="20"
@@ -159,12 +237,15 @@ const AddEmployees = () => {
       </svg>
     </span>
     Cancel
-  </Link>
+    </Link>
+  </button>
+  </div>
+
+
 </div>
-
-
-            </div>
-          </form>
+</form>
+  {/* Cancel SVG Link */}
+ 
         </div>
       </div>
     </>

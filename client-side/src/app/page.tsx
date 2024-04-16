@@ -1,5 +1,7 @@
 import SignIn from "@/app/auth/signin/page";
+import { AuthProvider } from "@/hooks/auth";
 import { Metadata } from "next";
+import { AppProps } from "next/app";
 
 
 export const metadata: Metadata = {
@@ -10,8 +12,11 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
+    <AuthProvider>
     <>
     <SignIn />
     </>
+    </AuthProvider>
+    
   );
 }

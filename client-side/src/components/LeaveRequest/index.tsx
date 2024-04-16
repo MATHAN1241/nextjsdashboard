@@ -1,7 +1,7 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Employee } from "@/types/employee";
-import { LeaveRequest } from "@/types/leaveRequest";
+//import { Employee } from "@/types/employee";
+import { EmployeeLeaveRequest } from "@/types/employeeLeaveReq";
 //import { LeaveRequest } from "@/types/leaveRequest";
 import axios from "axios";
 import Image from "next/image";
@@ -30,13 +30,13 @@ import { useEffect, useState } from "react";
 // ];
 
 const LeaveRequest = () => {
-  const[req,setRequests]=useState<LeaveRequest[]>([]);
-const[rmes,setMessage]=useState('');
+  const[req,setRequests]=useState([]);
+  const[rmes,setMessage]=useState('');
 
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/requests');
+        const response = await axios.get<EmployeeLeaveRequest[]>('http://localhost:5000/api/leaverequests');
         setRequests(response.data);
       } catch (error) {
         console.error('Error fetching requests:', error);
@@ -95,8 +95,8 @@ const[rmes,setMessage]=useState('');
               </tr>
             </thead>
             <tbody>
-              {req.map((employee, key) => (
-                <tr key={key}>
+              {req.map((employee) => (
+                <tr key={employee._id}>
                   
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
@@ -144,10 +144,10 @@ const[rmes,setMessage]=useState('');
                               strokeLinecap="round"
                               strokeLinejoin="round"
                             />
-</svg>
+                          </svg>
 
 
-                      </button>
+                         </button>
                         {/* </Link> */}
                       
 

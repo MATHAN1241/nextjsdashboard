@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const User = require('../models/signu');
 
 // router.post('/', async (req, res) => {
 //   const { name, email, password, confirmPassword } = req.body;
@@ -47,11 +47,13 @@ router.post('/', [
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+    return res.status(400).json({ error: errors.array() });
   }
 
-  const { name, email, password } = req.body;
-
+  const { name, email, password,category } = req.body;
+  if (!email || !password || !name) {
+    return res.status(400).json({ message: '*Please provide both email and password' });
+  }
   try {
     // Check if the email already exists
     const existingUser = await User.findOne({ email });
@@ -63,14 +65,28 @@ router.post('/', [
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create a new user
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({ name, email, password: hashedPassword,category });
     await newUser.save();
 
-    const token = jwt.sign({ userId: newUser._id }, 'your_secret_key', { expiresIn: '1h' });
+    const token = jwt.sign({ userId: newUser._id }, secrtkey , { expiresIn: '1h' });
 
     res.status(201).json({ message: 'User created successfully', token });
   } catch (error) {
     console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+const secrtkey='you_secret_key';
+router.get('/:id', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });

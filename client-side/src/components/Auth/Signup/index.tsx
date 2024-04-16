@@ -10,10 +10,14 @@ import { useRouter } from "next/navigation";
 // const [error, setError] = useState(null);
 const SignUp: React.FC = () => {
   //const [userData,setUserData]=useState(null);
+ // const [catagory,setcatagory]=useState('');
+  const [category, setCategory] = useState<string>('');
+  const [isAdmin, setIsAdmin] = useState<boolean>(true); 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  //const [category,setCategory]=useState('');
   const [nameError, setNameError] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -71,7 +75,7 @@ const router=useRouter();
     
 
   // Check if the password meets the criteri
-    const userData = { name, email, password, confirmPassword };
+    const userData = { name, email, password, confirmPassword,category };
     const uppercaseRegex = /[A-Z]/;
     const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
    
@@ -172,10 +176,10 @@ const router=useRouter();
         //setError(errorMessages);
       }
       else if (errorData && errorData.error === 'Email already exists') {
-        setEmailError('*Email already exists'); // Set specific error message
+        setEmailError('*Emailll already exists'); // Set specific error message
       }
       else if (errorData && errorData.error === 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character') {
-        setPasswordError( '*Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character confirm 8 charcters' );
+        setPasswordError( '*Passwordss must contain at least one uppercase letter, one lowercase letter, one number, and one special character confirm 8 charcters' );
       }
       else if (errorData && errorData.error === 'Passwords do not match') {
         setPasswordError( 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character' );
@@ -471,6 +475,21 @@ const router=useRouter();
                       {/* {error.email && <span>{error.email}</span>} */}
                       {emailError && <p>{emailError}</p>}
                 </div>
+                <div className="mb-4">
+        <label className="mb-2.5 block font-medium text-black dark:text-white">
+          Category
+        </label>
+        <select
+          value={category}
+          onChange={(e)=>setCategory(e.target.value)}
+        // disabled={!isAdmin} // Disable the select if user is admin
+          className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+        >
+          <option value="">Select Category</option>
+          <option value="admin">Admin</option>
+          <option value="employee">Employee</option>
+        </select>
+      </div>
                
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">

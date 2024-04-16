@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const Employee = require('../models/Employee');
+const {Employee} = require('../models/Employee');
 const multer = require('multer');
 
 const storage = multer.diskStorage({
@@ -30,18 +30,61 @@ router.get('/', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-// Route for handling employee data submission
+//Route for handling employee data submission
+// router.post('/', upload.single('imagePath'), async (req, res) => {
+//    const { employeeId, firstName, lastName, email, contactNo, employeeRole, employeeSalary, address } = req.body;
+//   let imagePath = req.file ? req.file.path : null;
+//   imagePath = imagePath ? imagePath.replace(/\\/g, '/') : null;
+//   imagePath =imagePath?.slice(7)??null;
+//   try {
+//     // const newEmployee = new Employee(req.body);
+//     const existingEmployee = await Employee.findOne({ $or: [{ email }, { contactNo }] });
+//     if (existingEmployee) {
+//       return res.status(400).json({ error: 'Email or phone number already exists' });
+//     }
+//     const newEmployee = new Employee({ employeeId, firstName, lastName, email, contactNo, employeeRole, employeeSalary, address, imagePath });
+//     await newEmployee.save();
+//     res.status(201).json({ message: 'Employee added successfully' });
+//   } catch (error) {
+//     console.error('Error adding employee:', error);
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });
 router.post('/', upload.single('imagePath'), async (req, res) => {
-   const { employeeId, firstName, lastName, email, contactNo, employeeRole, employeeSalary, address } = req.body;
+  const { employeeId, firstName, lastName, email, contactNo, employeeRole, employeeSalary, address } = req.body;
   let imagePath = req.file ? req.file.path : null;
   imagePath = imagePath ? imagePath.replace(/\\/g, '/') : null;
-  imagePath =imagePath?.slice(7)??null;
+  imagePath = imagePath?.slice(7) ?? null;
+
+  // Validate if all required fields are filled
+  if (!employeeId || !firstName || !lastName || !email || !contactNo || !employeeRole || !employeeSalary || !address ) {
+    return res.status(400).json({ message: '*Please fill in all required fields' });
+  }
+
   try {
-    // const newEmployee = new Employee(req.body);
-    const existingEmployee = await Employee.findOne({ $or: [{ email }, { contactNo }] });
-    if (existingEmployee) {
-      return res.status(400).json({ error: 'Email or phone number already exists' });
+    // Check if the email or contact number already exists in the database
+    // const existingEmployee = await Employee.findOne({ $or: [{ email }, { contactNo }] });
+    // if (existingEmployee) {
+    //   return res.status(400).json({ message: '*Email or phone number already exists' });
+    // }
+    const existingEmail = await Employee.findOne({ email });
+    const existingContactNo = await Employee.findOne({ contactNo });
+
+    if (existingEmail && existingContactNo) {
+        return res.status(400).json({ message: '*Email and phone number already exist' });
+    } else if (existingEmail) {
+        return res.status(400).json({ message: '*Email already exists' });
+    } else if (existingContactNo) {
+        return res.status(400).json({ message: '*Phone number already exists' });
     }
+
+    // Check if the employeeId already exists in the database
+    const existingEmployeeId = await Employee.findOne({ employeeId });
+    if (existingEmployeeId) {
+      return res.status(400).json({ message: '*Employee ID already exists' });
+    }
+
+    // If no duplication and all fields are filled, proceed to save the new employee
     const newEmployee = new Employee({ employeeId, firstName, lastName, email, contactNo, employeeRole, employeeSalary, address, imagePath });
     await newEmployee.save();
     res.status(201).json({ message: 'Employee added successfully' });
@@ -50,6 +93,7 @@ router.post('/', upload.single('imagePath'), async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 router.post('/verify-email', async (req, res) => {
   const { email } = req.body;
   try {

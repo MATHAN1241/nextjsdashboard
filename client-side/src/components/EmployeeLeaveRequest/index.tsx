@@ -1,31 +1,62 @@
+"use client";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { EmployeeLeaveRequest as EmployeeLeaveRequestType } from "@/types/employeeLeaveReq"; // Renaming the import alias
+import { EmployeeLeaveRequest } from "@/types/employeeLeaveReq"; // Renaming the import alias
+import axios from "axios";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-const employeeData: EmployeeLeaveRequestType[] = [ // Using the renamed import alias
-  {
+// const employeeData: EmployeeLeaveRequestType[] = [ // Using the renamed import alias
+//   {
     
-    employeeName: "John", // DisplEmployeeLeaveRequestay picture (image path)
-    requestedDate: "09/12/2045",
-    fromDate: "09/02/2023",
-    toDate: "23/12/2024",
-    reason: "SICK LEAVE",
-    status:"approved"
-  },
-  {
+//     employeeName: "John", // DisplEmployeeLeaveRequestay picture (image path)
+//     requestedDate: "09/12/2045",
+//     fromDate: "09/02/2023",
+//     toDate: "23/12/2024",
+//     reason: "SICK LEAVE",
+//     status:"approved"
+//   },
+//   {
     
-    employeeName: "John", // DisplEmployeeLeaveRequestay picture (image path)
-    requestedDate: "09/12/2045",
-    fromDate: "09/02/2023",
-    toDate: "23/12/2024",
-    reason: "SICK LEAVE",
-    status:"declined"
-  },
-  // Add more employee objects as needed
-];
+//     employeeName: "John", // DisplEmployeeLeaveRequestay picture (image path)
+//     requestedDate: "09/12/2045",
+//     fromDate: "09/02/2023",
+//     toDate: "23/12/2024",
+//     reason: "SICK LEAVE",
+//     status:"declined"
+//   },
+//   // Add more employee objects as needed
+// ];
 
 const EmployeeLeaveRequestComponent = () => { // Renaming the local variable
+  const [leaveForms, setLeaveForms] = useState([]);
+  // useEffect(() => {
+  //   // Fetch data from backend API route
+  //   // axios.get<EmployeeLeaveRequest[]>('http://localhost:5000/api/leaverequests') // Assuming your backend route is '/api/leave-forms'
+  //   //   .then(response => {
+  //   //     setLeaveForms(response.data);
+  //   //   })
+  //   //   .catch(error => {
+  //   //     console.error('Error fetching leave forms:', error);
+  //   //   });
+   
+  // } catch (error) {
+  //   console.error('Error fetching employees:', error);
+  // });
+  // }, []);
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get<EmployeeLeaveRequest[]>('http://localhost:5000/api/leaverequests');
+        setLeaveForms(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
   return (
     <>
       <Breadcrumb pageName="Employee Leave Request" />
@@ -63,7 +94,7 @@ const EmployeeLeaveRequestComponent = () => { // Renaming the local variable
                 Employee Name
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                  Requested Date
+                 EmployeeId
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
                   From Date
@@ -80,16 +111,16 @@ const EmployeeLeaveRequestComponent = () => { // Renaming the local variable
               </tr>
             </thead>
             <tbody>
-              {employeeData.map((leave, key) => (
-                <tr key={key}>
+              {leaveForms.map(leave => (
+                <tr key={leave._id}>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {leave.employeeName}
+                      {leave.firstName}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
-                      {leave.requestedDate}
+                      {leave.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">

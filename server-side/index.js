@@ -106,6 +106,7 @@ const cors = require('cors');
 const signupRoute = require('./routes/signup');
 const loginRoute = require('./routes/login');
 const employeeAdd= require('./routes/employeeAdd');
+const leaveform = require('./routes/leaveRequestform');
 const leaveRequestRoutes = require('./routes/leaverequests');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -142,6 +143,9 @@ app.use('/api/auth/login', loginRoute);
 app.use('/api/employees',employeeAdd);
 app.use(express.static('public'));
 app.use('/api/requests', leaveRequestRoutes);
+app.use('/api/leaverequests',leaveform);
+// app.use('/api/attendanceregister', registerRouter);
+
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

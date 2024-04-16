@@ -39,10 +39,50 @@ const employeeSchema = new mongoose.Schema({
   imagePath: {
     type: String, // Assuming you store the path to the image file
     required: true
-  }
+  },
+ 
+});
+const leaveRequestSchema = new mongoose.Schema({
+
+  
+  firstName: {
+    type: String,
+ 
+  },
+  employeeId: {
+    type: String,
+    
+  },
+  email: {
+    type: String,
+    
+  },
+  contactNo: {
+    type: String,
+    
+  },
+  
+  fromDate: {
+      type: Date,
+      
+  },
+  toDate: {
+      type: Date,
+      
+  },
+  employeeRole: {
+    type: String,
+  
+  },
+
+  reason: {
+      type: String,
+ 
+  },
+ 
 });
 
 // Create the Employee model
 const Employee = mongoose.model('Employee', employeeSchema);
-
-module.exports = Employee;
+const LeaveForm = mongoose.model('LeaveForm', leaveRequestSchema);
+module.exports = {Employee,LeaveForm};

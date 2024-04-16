@@ -81,47 +81,47 @@ const [address, setAddress] = useState('');
 const [imagePath, setImagePath] = useState<File | null>(null);
 const [error, setError]=useState('');
 const router=useRouter();
-const handleEmailBlur = async (e: { target: { value: any; }; }) => {
-  const email = e.target.value;
-  try {
-    const response = await axios.post('http://localhost:5000/api/employees/verify-email', { email });
-    if (response.data.exists) {
-      setError('*Email already exists');
-    } else {
-      setError('');
-    }
-  } catch (error) {
-    console.error('Error verifying email:', error);
-    setError('Error verifying email');
-  }
-};
+// const handleEmailBlur = async (e: { target: { value: any; }; }) => {
+//   const email = e.target.value;
+//   try {
+//     const response = await axios.post('http://localhost:5000/api/employees/verify-email', { email });
+//     if (response.data.exists) {
+//       setError('*Email already exists');
+//     } else {
+//       setError('');
+//     }
+//   } catch (error) {
+//     console.error('Error verifying email:', error);
+//     setError('Error verifying email');
+//   }
+// };
 
-const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
-  const contactNo = e.target.value;
-  try {
-    const response = await axios.post('http://localhost:5000/api/employees/verify-contactno', { contactNo });
-    if (response.data.exists) {
-      setError('*Contact number already exists');
-    } else {
-      setError('');
-    }
-  } catch (error) {
-    console.error('Error verifying contact number:', error);
-    setError('Error verifying contact number');
-  }
-};
+// const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
+//   const contactNo = e.target.value;
+//   try {
+//     const response = await axios.post('http://localhost:5000/api/employees/verify-contactno', { contactNo });
+//     if (response.data.exists) {
+//       setError('*Contact number already exists');
+//     } else {
+//       setError('');
+//     }
+//   } catch (error) {
+//     console.error('Error verifying contact number:', error);
+//     setError('Error verifying contact number');
+//   }
+// };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
    
    const formData={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
-   if (!employeeId || !firstName || !lastName || !email || !contactNo || !employeeRole || !employeeSalary || !address || !imagePath) {
-    setError('*Please fill in all required fields');
+  //  if (!employeeId || !firstName || !lastName || !email || !contactNo || !employeeRole || !employeeSalary || !address || !imagePath) {
+  //   setError('*Please fill in all required fields');
   
-  }
-  else{
-    setError('');
-  }
+  // }
+  // else{
+  //   setError('');
+  // }
 
    //  const formData = new FormData();
   //   formData.append('employeeId', employeeId);
@@ -143,15 +143,25 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
       //   formDataWithImage.append(key, value as string | Blob); // Append each field to FormData
       // });
       console.log(formData);
-      const response = await axios.post('http://localhost:5000/api/employees', formData, {
+      // const response = await axios.post('http://localhost:5000/api/employees', formData, {
+      //   headers: {
+      //     'Content-Type': 'multipart/form-data'
+      //   }
+      // });
+      const response = await axios.post('http://localhost:5000/api/employees', formData,{
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
       console.log(response.data);
       router.push('/employees');
-    } catch (error) {
+    } catch (error:any) {
       console.error('Error:', error);
+      if (error.response) {
+        setError(error.response.data.message);
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
       
     }
   };
@@ -171,7 +181,7 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
           <form action="#" onSubmit={handleSubmit} >
         
             <div className="p-6.5">
-          
+            {error && <p className="text-pink-500 decoration-4">{error}</p>}
               <div className="mb-4.5">
                 <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                   Employee ID <span className="text-meta-1">*</span>
@@ -227,11 +237,11 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
                     name="email"
                     value={email}
                     onChange={(e)=>setEmail(e.target.value)}
-                    onBlur={handleEmailBlur}
+               
                     placeholder="Enter your email address"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />
-                    {<p className="text-pink-500">{error}</p>}
+                    {/* {<p className="text-pink-500">{error}</p>} */}
                 </div>
                 <div className="w-full xl:w-1/2">
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
@@ -245,7 +255,7 @@ const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
                     name="contactNo"
                     value={contactNo}
                     onChange={(e)=>setContactNo(e.target.value)}
-                  onBlur={handleContactNoBlur}
+                  
                     placeholder="Enter your contact number"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                   />

@@ -36,6 +36,7 @@ router.post('/:id/approve', (req, res) => {
   if (index !== -1) {
     leaveRequests[index].status = 'approved';
     res.status(200).json({ message: 'Request approved successfully' });
+    console.log("msg approved");
   } else {
     res.status(404).json({ error: 'Request not found' });
   }

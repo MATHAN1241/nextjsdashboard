@@ -70,6 +70,7 @@ const Employees = () => {
      
       // Handle successful deletion (optional)
       console.log('Employee deleted sucess');
+      //setShowModel(false);
       router.push(`/employees`);
       //setShowModal(false);
     } catch (error) {
@@ -153,7 +154,7 @@ const Employees = () => {
                          //src={`public/images/${employee.imagePath}`}
                         width={60}
                         height={50}
-                        alt="http://ocalhost:5000/public/images/25.jpg"
+                        alt={`http://localhost:5000/images/25.jpg`}
                       />}
                     </div>
                   </td>

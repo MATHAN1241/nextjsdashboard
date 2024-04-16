@@ -5,13 +5,26 @@ import Image from "next/image";
 import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/auth";
+// import { useAuth } from "@/hooks/auth";
+// export const extractUserData = (response: { data: { user: any; }; }) => {
+//   const user = response.data.user;
+//   const role = user.category;
+//   const uname = user.name;
+//   const uemail = user.email;
 
+//   return { role, uname, uemail };
+// };
 
 const SignIn: React.FC = () => {
+ // const { user, login, logout } = useAuth();
+ const  {setUserData}  = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const[error,setError]=useState('');
+  // const[details,setdetails]=useState(null);
   const router = useRouter();
+  
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();   
@@ -29,9 +42,27 @@ const SignIn: React.FC = () => {
       //     router.push('/dashboard');
       // }
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      const user = response.data.user;
+      const role=user.category;     
+      const uemail=user.email;
+      console.log("hello:",role,uemail);
+      setUserData({
+        role: user.category,
+        uemail: user.email,
+      });
+      // setdetails(user);
+      // login(user);
+      // Redirect based on user's category
+      if (user.category === 'admin') {
+           console.log("user:",user);
+        router.push(`/dashboard`); // Redirect to admin dashboard
+      } else if (user.category === 'employee') {
+        router.push(`/dashboard`); // Redirect to employee dashboard
+      }
       console.log(response.data);
-      console.log(router);
-      router.push('/dashboard');
+      console.log("user:",user);
+    
+     // router.push('/dashboard');
       // Redirect or perform actions after successful login
     } catch (error:any) {
       console.error('Error:', error);
@@ -48,7 +79,7 @@ const SignIn: React.FC = () => {
       if (error.response) {
         setError(error.response.data.message);
       } else {
-        setError('Something went wrong. Please try again.');
+        setError('*Something went wrong. Please try again.');
       }
     }
     
@@ -248,7 +279,7 @@ const SignIn: React.FC = () => {
 
               <div className="mb-6">
                 <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  Re-type Password
+                Password
                 </label>
                 <div className="relative">
                   <input

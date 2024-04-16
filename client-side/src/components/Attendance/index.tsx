@@ -43,7 +43,7 @@ const AttendanceList = () => {
               src={`http://localhost:5000/${employee.imagePath}`}
               width={130}
               height={80}
-              alt="User Image"
+              alt={`http://localhost:5000/images/25.jpg`}
             />
           </div>
           <div className="z-10  transition-all duration-500 group-hover:-translate-y-10">

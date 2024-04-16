@@ -4,7 +4,10 @@ import Image from "next/image";
 
 
 import Link from "next/link";
+
+
 const profiled= () =>{
+  
 return(
    <React.Fragment>
       <div className="mx-auto max-w-242.5">

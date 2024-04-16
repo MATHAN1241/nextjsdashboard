@@ -1,8 +1,9 @@
 export type EmployeeLeaveRequest = {
-    employeeName: string; // DisplEmployeeLeaveRequestay picture (image path)
-    requestedDate: string;
+    firstName: string; // DisplEmployeeLeaveRequestay picture (image path)
+    employeeId: string;
     fromDate: string;
     toDate: string;
     reason: string;
     status:string;
+    _id:string
   };
