@@ -6,7 +6,7 @@ const Card = () => {
   return (
 
 <>
-<Breadcrumb pageName='Register-Page'/>
+<Breadcrumb pageName='Attendance Page'/>
 <div className="row">
   <div className="flex flex-cols-2 gap-8">
     <div className="group relative flex h-70 w-80 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl from-sky-200 via-orange-200 to-orange-700 text-center shadow-xl before:absolute before:top-0 before:h-70 before:w-80 before:rounded-t-2xl before:bg-gradient-to-bl before:transition-all before:duration-500 before:content-[''] dark:bg-boxdark">
