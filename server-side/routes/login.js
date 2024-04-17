@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/signu');
-
+const verifyToken=require('../middleware/auth')
 // router.post('/', async (req, res) => {
 //   const { email, password } = req.body;
 
@@ -50,6 +50,16 @@ router.post('/', async (req, res) => {
     
     // Password is correct, generate and send token
     const token = jwt.sign({ userId: user._id }, 'your_secret_key', { expiresIn: '1m' });
+    // const payload = {
+    //   userId: {
+    //       id: user.id
+    //   }
+    // };
+
+    // jwt.sign(payload, 'jwtSecret', { expiresIn: 3600 }, (err, token) => {
+    //   if (err) throw err;
+    //   res.json({ token });
+    // });
     // Return user data (you may want to exclude password)
     res.status(200).json({ user: { _id: user._id, email: user.email,category: user.category  }, message: 'Login successful', token });
   } catch (error) {
@@ -57,7 +67,7 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
   const { email } = req.query; // Assuming email is passed as a query parameter
 
   try {
