@@ -108,6 +108,7 @@ const loginRoute = require('./routes/login');
 const employeeAdd= require('./routes/employeeAdd');
 const leaveform = require('./routes/leaveRequestform');
 const leaveRequestRoutes = require('./routes/leaverequests');
+const verifyToken = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const multer = require('multer');
@@ -139,9 +140,10 @@ mongoose.connect('mongodb://localhost:27017/lyzooattendance', {
 
 // Routes
 app.use('/api/auth/signup', signupRoute);
-app.use('/api/auth/login', loginRoute);
+app.use('/api/auth/login',loginRoute);
 app.use('/api/employees',employeeAdd);
 app.use(express.static('public'));
+// app.use('/api/auth/verifyToken',verifyToken);
 app.use('/api/requests', leaveRequestRoutes);
 app.use('/api/leaverequests',leaveform);
 // app.use('/api/attendanceregister', registerRouter);

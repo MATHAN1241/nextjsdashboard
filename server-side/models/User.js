@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ['admin', 'employee'],
-    default: 'employee',
+    
   },
 });
 

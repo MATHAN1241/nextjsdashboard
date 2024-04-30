@@ -9,6 +9,8 @@ import SideBarFooter from "./SideBarFooter";
 import axios from "axios";
 import { Signup } from "@/types/signup";
 import { useAuth } from "@/hooks/auth";
+import { useSelector } from "react-redux";
+import User from "@/types/user";
 
 
 interface SidebarProps {
@@ -16,9 +18,13 @@ interface SidebarProps {
   setSidebarOpen: (arg: boolean) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  // const { user } = useAuth();
-  // console.log(user); 
+const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
+    // const { userData } = useAuth();
+    // console.log(userData); 
+  //  const user = useSelector((state: { user: User | null }) => state.user);
+  // console.log(user?.email);
+  // console.log(user?.category);
+  // const useRole=getuseRole();
   const pathname = usePathname();
   // const[category,setcategory]=useState<String | null>(null);
   const trigger = useRef<any>(null);
@@ -67,8 +73,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   //   fetchUserType();
   // }, []);
   const [users, setUsers] = useState<Signup[]>([]);
-  const { userData } = useAuth();
-  console.log(userData?.role);
+  //const { userData } = useAuth();
+  //console.log(userData);
   // useEffect(() => {
   //   const fetchUsers = async () => {
   //     try {

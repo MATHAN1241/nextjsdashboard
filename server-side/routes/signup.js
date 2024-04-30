@@ -68,9 +68,9 @@ router.post('/', [
     const newUser = new User({ name, email, password: hashedPassword,category });
     await newUser.save();
 
-    const token = jwt.sign({ userId: newUser._id }, secrtkey , { expiresIn: '1h' });
+//const token = jwt.sign({ userId: newUser._id }, secrtkey , { expiresIn: '1h' });
 
-    res.status(201).json({ message: 'User created successfully', token });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Server error' });

@@ -3,7 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/signu');
-const verifyToken=require('../middleware/auth')
+
+
 // router.post('/', async (req, res) => {
 //   const { email, password } = req.body;
 
@@ -61,32 +62,33 @@ router.post('/', async (req, res) => {
     //   res.json({ token });
     // });
     // Return user data (you may want to exclude password)
-    res.status(200).json({ user: { _id: user._id, email: user.email,category: user.category  }, message: 'Login successful', token });
+    
+    // res.cookie('jwt',token,{
+    //   httpOnly:true,
+    //   nexAge:24*60*60*1000 // 1days
+    // });
+    res.cookie('token', token, { httpOnly: true });
+
+    // res.send({message:"success"});
+    res.status(200).json({ user: { _id: user._id, email: user.email,category: user.category ,name:user.name }, message: 'Login successful', token });
   } catch (error) {
     console.error('Error logging in:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
-router.get('/', verifyToken, async (req, res) => {
-  const { email } = req.query; // Assuming email is passed as a query parameter
-
+router.get('/:id', async (req, res) => {
   try {
-    if (!email) {
-      return res.status(400).json({ message: '*Please provide an email' });
-    }
-
-    // Find the user by email
-    const user = await User.findOne({ email });
+    const userId = req.params.id;
+    console.log(userId,"aaaaa");
+    
+    const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: '*User not found' });
+      return res.status(404).json({ message: 'User not found' });
     }
-
-    // Return user data (you may want to exclude sensitive information like password)
-
-    res.status(200).json({ user: { _id: user._id, email: user.email, category: user.category, name:user.name } });
+    res.status(200).json(user);
   } catch (error) {
-    console.error('Error fetching user data:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 // router.get('/', async (req, res) => {

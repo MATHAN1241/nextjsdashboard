@@ -41,6 +41,8 @@ import { ReactNode, createContext, useContext, useState } from 'react';
 interface UserData {
   role: string;
   uemail: string;
+  id:string;
+  name:string;
 }
 
 interface AuthContextType {

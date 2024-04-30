@@ -6,6 +6,7 @@ import DarkModeSwitcher from "@/components/Header/DarkModeSwitcher";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
+import User from "@/types/user";
 // import { useAuth } from "@/hooks/auth";
 // export const extractUserData = (response: { data: { user: any; }; }) => {
 //   const user = response.data.user;
@@ -18,7 +19,8 @@ import { useAuth } from "@/hooks/auth";
 
 const SignIn: React.FC = () => {
  // const { user, login, logout } = useAuth();
- const  {setUserData}  = useAuth();
+ //const  {setUserData}  = useAuth();
+ const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const[error,setError]=useState('');
@@ -42,19 +44,26 @@ const SignIn: React.FC = () => {
       //     router.push('/dashboard');
       // }
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
+      console.log(response);
+      
       const user = response.data.user;
       const role=user.category;     
       const uemail=user.email;
-      console.log("hello:",role,uemail);
-      setUserData({
-        role: user.category,
-        uemail: user.email,
-      });
+      const id=user._id;
+      const name=user.name;
+      //localStorage.setItem('token', response.data.token);
+      console.log("hello:",role,uemail,id,name);
+      setUser(response.data.user);
+      // setUserData({
+      //   role,uemail,id,name
+      //   // role: user.category,
+      //   // uemail: user.email,
+      // });
       // setdetails(user);
       // login(user);
       // Redirect based on user's category
       if (user.category === 'admin') {
-           console.log("user:",user);
+          console.log("user:",user);
         router.push(`/dashboard`); // Redirect to admin dashboard
       } else if (user.category === 'employee') {
         router.push(`/dashboard`); // Redirect to employee dashboard

@@ -1,12 +1,20 @@
 "use client";
 import React, { useState, ReactNode } from "react";
+
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
-
+interface UserData {
+  role: string;
+  uemail: string;
+  id: string;
+}
 export default function DefaultLayout({
   children,
+  //userData
+  
 }: {
   children: React.ReactNode;
+ // userData:UserData; 
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
@@ -14,7 +22,7 @@ export default function DefaultLayout({
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  />
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}

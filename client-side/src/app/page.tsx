@@ -1,5 +1,6 @@
 import SignIn from "@/app/auth/signin/page";
 import { AuthProvider } from "@/hooks/auth";
+import store from "@/hooks/store";
 import { Metadata } from "next";
 import { AppProps } from "next/app";
 
@@ -20,3 +21,17 @@ export default function Home() {
     
   );
 }
+//pages/_app.tsx
+// import { Provider } from 'react-redux';
+
+
+// const Home: React.FC<{ pageProps: any }> = ({ pageProps }) => {
+//     return (
+//         <Provider store={store}>
+//             <SignIn {...pageProps} />
+//         </Provider>
+//     );
+// };
+
+// export default Home;
+
