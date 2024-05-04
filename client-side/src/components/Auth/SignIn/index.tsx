@@ -7,6 +7,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
 import User from "@/types/user";
+import { log } from "console";
+
 // import { useAuth } from "@/hooks/auth";
 // export const extractUserData = (response: { data: { user: any; }; }) => {
 //   const user = response.data.user;
@@ -20,10 +22,13 @@ import User from "@/types/user";
 const SignIn: React.FC = () => {
  // const { user, login, logout } = useAuth();
  //const  {setUserData}  = useAuth();
+
  const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
   const[error,setError]=useState('');
+  
   // const[details,setdetails]=useState(null);
   const router = useRouter();
   
@@ -32,6 +37,8 @@ const SignIn: React.FC = () => {
     e.preventDefault();   
     try {
       const formData={email,password};
+      console.log(formData,"nnnn");
+      
       // if(!email || !password){
       //   setError("*Fill in the Form");
        
@@ -44,7 +51,7 @@ const SignIn: React.FC = () => {
       //     router.push('/dashboard');
       // }
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
-      console.log(response);
+      console.log(response,"ooooo");
       
       const user = response.data.user;
       const role=user.category;     

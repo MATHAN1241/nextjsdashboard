@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 
 const BasicEcommercePage: React.FC = () => {
   return (
-    <DefaultLayout>
+    
+    <DefaultLayout >
       <Ecommerce />
     </DefaultLayout>
   );

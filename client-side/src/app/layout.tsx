@@ -5,7 +5,7 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
-import { AuthProvider } from "@/hooks/auth";
+//import { AuthProvider } from "@/hooks/auth";
 
 
 export default function RootLayout({
@@ -13,9 +13,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  <AuthProvider>
+  // <AuthProvider>
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  </AuthProvider>
+ // </AuthProvider>
   const [loading, setLoading] = useState<boolean>(true);
 
   // const pathname = usePathname();

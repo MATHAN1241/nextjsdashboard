@@ -397,7 +397,7 @@ const router=useRouter();
               Sign Up to <span className="text-orange-500">Lyzoo Attendance</span> 
             </h2>
            
-              <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
              {/* {error && <p className="text-pink-500">{error}</p>} */}
               {/* {error.server && <p>{error.server}</p>} */}
               {serverError && <p>{serverError}</p>}
