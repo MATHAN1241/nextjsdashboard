@@ -9,145 +9,24 @@ import { ChangeEvent, FormEvent, useState } from "react";
 
 
 const AddEmployees: React.FC =  () => {
-  // const [formData, setFormData] = useState<FormData>({
-  //   employeeId: '',
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   contactNo: '',
-  //   employeeRole: '',
-  //   employeeSalary: '',
-  //   address: '',
-  //   image: null
-  // });
-
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  // };
-
-  // const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     setFormData({ ...formData, image: e.target.files[0] });
-  //   }
-  // };
-  // const router = useRouter();
-  // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   try {
-  //     const formDataWithImage = new FormData();
-  //     Object.entries(formData).forEach(([key, value]) => {
-  //       formDataWithImage.append(key, value);
-  //     });
-  //     console.log(formDataWithImage);
-  //     const response = await axios.post('http://localhost:5000/api/employees', formDataWithImage);
-  //     console.log(response.data);
-  //     router.push('/employees')
-  //   } catch (error) {
-  //     console.error('Error:', error);
-  //   }
-  // };
-  // const [formData, setFormData] = useState({
-  //   employeeId: '',
-  //   firstName: '',
-  //   lastName: '',
-  //   email: '',
-  //   contactNo: '',
-  //   employeeRole: '',
-  //   employeeSalary: '',
-  //   address: '',
-  //   image: null as File | null // File type for storing image file
-  // });
-
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData({ ...formData, [name]: value });
-  // };
-
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0]; // Get the first file from the input
-  //   if(file){
-  //   setFormData({ ...formData, image: file });
-  //   }
-  // };
   const [employeeId, setEmployeeId] = useState('');
-const [firstName, setFirstName] = useState('');
-const [lastName, setLastName] = useState('');
-const [email, setEmail] = useState('');
-const [contactNo, setContactNo] = useState('');
-const [employeeRole, setEmployeeRole] = useState('');
-const [employeeSalary, setEmployeeSalary] = useState('');
-const [address, setAddress] = useState('');
-const [imagePath, setImagePath] = useState<File | null>(null);
-const [error, setError]=useState('');
-const router=useRouter();
-// const handleEmailBlur = async (e: { target: { value: any; }; }) => {
-//   const email = e.target.value;
-//   try {
-//     const response = await axios.post('http://localhost:5000/api/employees/verify-email', { email });
-//     if (response.data.exists) {
-//       setError('*Email already exists');
-//     } else {
-//       setError('');
-//     }
-//   } catch (error) {
-//     console.error('Error verifying email:', error);
-//     setError('Error verifying email');
-//   }
-// };
-
-// const handleContactNoBlur = async (e: { target: { value: any; }; }) => {
-//   const contactNo = e.target.value;
-//   try {
-//     const response = await axios.post('http://localhost:5000/api/employees/verify-contactno', { contactNo });
-//     if (response.data.exists) {
-//       setError('*Contact number already exists');
-//     } else {
-//       setError('');
-//     }
-//   } catch (error) {
-//     console.error('Error verifying contact number:', error);
-//     setError('Error verifying contact number');
-//   }
-// };
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [contactNo, setContactNo] = useState('');
+  const [employeeRole, setEmployeeRole] = useState('');
+  const [employeeSalary, setEmployeeSalary] = useState('');
+  const [address, setAddress] = useState('');
+  const [imagePath, setImagePath] = useState<File | null>(null);
+  const [error, setError]=useState('');
+  const router=useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
    
    const formData={employeeId,firstName,lastName,email,contactNo,employeeRole,employeeSalary,address,imagePath};
-  //  if (!employeeId || !firstName || !lastName || !email || !contactNo || !employeeRole || !employeeSalary || !address || !imagePath) {
-  //   setError('*Please fill in all required fields');
-  
-  // }
-  // else{
-  //   setError('');
-  // }
-
-   //  const formData = new FormData();
-  //   formData.append('employeeId', employeeId);
-  //   formData.append('firstName', firstName);
-  //   formData.append('lastName', lastName);
-  //   formData.append('email', email);
-  //   formData.append('contactNo', contactNo);
-  //   formData.append('employeeRole', employeeRole);
-  //   formData.append('employeeSalary', employeeSalary);
-  //   formData.append('address', address);
-  //   if (imagePath) {
-  //     formData.append('imagePath', imagePath);
-
-  //   }
-
    try {
-      // const formDataWithImage = new FormData();
-      // Object.entries(formData).forEach(([key, value]) => {
-      //   formDataWithImage.append(key, value as string | Blob); // Append each field to FormData
-      // });
       console.log(formData);
-      // const response = await axios.post('http://localhost:5000/api/employees', formData, {
-      //   headers: {
-      //     'Content-Type': 'multipart/form-data'
-      //   }
-      // });
       const response = await axios.post('http://localhost:5000/api/employees', formData,{
         headers: {
           'Content-Type': 'multipart/form-data'

@@ -1,6 +1,7 @@
 import SignIn from "@/app/auth/signin/page";
 import { AuthProvider } from "@/hooks/auth";
-import store from "@/hooks/store";
+import { store } from "@/hooks/store";
+
 import { Metadata } from "next";
 import { AppProps } from "next/app";
 

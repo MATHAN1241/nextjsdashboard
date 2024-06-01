@@ -2,9 +2,10 @@
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { EmployeeLeaveRequest } from "@/types/employeeLeaveReq"; // Renaming the import alias
 import axios from "axios";
-
+import { format } from 'date-fns';
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import moment from 'moment';
 
 // const employeeData: EmployeeLeaveRequestType[] = [ // Using the renamed import alias
 //   {
@@ -112,7 +113,8 @@ const EmployeeLeaveRequestComponent = () => { // Renaming the local variable
             </thead>
             <tbody>
               {leaveForms.map(leave => (
-                <tr key={leave._id}>
+                <tr key={leave._id}>  
+                              
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <h5 className="font-medium text-black dark:text-white">
                       {leave.firstName}
@@ -125,12 +127,16 @@ const EmployeeLeaveRequestComponent = () => { // Renaming the local variable
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {leave.fromDate}
+                      {/* {leave.fromDate} */}
+                      {/* {format(new Date(leave.fromDate.split('-').reverse().join('-')), 'dd-MM-yyyy')} */}
+                      {moment(leave.fromDate, 'YYYY-MM-DD').format('DD-MM-YYYY')}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {leave.toDate}
+                      {/* {leave.toDate} */}
+                      {/* {format(new Date((leave.toDate).split('-').reverse().join('-')), 'dd-MM-yyyy')} */}
+                      {moment(leave.toDate, 'YYYY-MM-DD').format('DD-MM-YYYY')}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">

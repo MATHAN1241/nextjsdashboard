@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Endpoint for handling image upload
-router.post('/api/upload', upload.single('imagePath'), (req, res) => {
+router.post('/api/upload',upload.single('imagePath'), (req, res) => {
   res.status(200).json({ message: 'Image uploaded successfully' });
 });
 

@@ -108,6 +108,8 @@ const loginRoute = require('./routes/login');
 const employeeAdd= require('./routes/employeeAdd');
 const leaveform = require('./routes/leaveRequestform');
 const leaveRequestRoutes = require('./routes/leaverequests');
+const dashboard= require('./routes/dashboard');
+const attendance=require('./routes/attendanceForm')
 const verifyToken = require('./middleware/auth');
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -146,6 +148,8 @@ app.use(express.static('public'));
 // app.use('/api/auth/verifyToken',verifyToken);
 app.use('/api/requests', leaveRequestRoutes);
 app.use('/api/leaverequests',leaveform);
+app.use('/api/home',dashboard);
+app.use('/api/attendance',attendance);
 // app.use('/api/attendanceregister', registerRouter);
 
 

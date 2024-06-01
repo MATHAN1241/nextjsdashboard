@@ -5,6 +5,7 @@ import "@/css/satoshi.css";
 import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
+import ReduxProvider from "@/hooks/redux/provider";
 //import { AuthProvider } from "@/hooks/auth";
 
 
@@ -29,9 +30,12 @@ export default function RootLayout({
  
     <html lang="en">
       <body suppressHydrationWarning={true}>
+      <ReduxProvider>
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
+           
           {loading ? <Loader /> : children}
         </div>
+        </ReduxProvider>
       </body>
     </html>
    

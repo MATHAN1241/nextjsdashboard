@@ -6,9 +6,12 @@ import { EmployeeLeaveRequest } from "@/types/employeeLeaveReq";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { format } from 'date-fns';
+import moment from 'moment';
 
-
+// import $ from 'jquery';
 // const employeeData: LeaveRequest[] = [
 //   {
    
@@ -31,13 +34,17 @@ import { useEffect, useState } from "react";
 
 const LeaveRequest = () => {
   const[req,setRequests]=useState([]);
+  const [disabledButtons, setDisabledButtons] = useState<string[]>([]);
   const[rmes,setMessage]=useState('');
-
+  const[error,seterror]=useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router=useRouter();
   useEffect(() => {
     const fetchRequests = async () => {
       try {
         const response = await axios.get<EmployeeLeaveRequest[]>('http://localhost:5000/api/leaverequests');
         setRequests(response.data);
+        
       } catch (error) {
         console.error('Error fetching requests:', error);
       }
@@ -47,9 +54,31 @@ const LeaveRequest = () => {
 
   const handleApprove = async (id: string) => {
     try {
-      await axios.post(`http://localhost:5000/api/requests/${id}/approve`);
-      setMessage('Request approved successfully');
-      console.log("approved succeessfully");
+      // setIsLoading(true);
+      // // Simulating data fetching with setTimeout
+      // setTimeout(() => {
+      //   // Your data fetching logic here
+      //   setIsLoading(false);
+      // }, 2000); 
+      // await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Approved`);
+      // setMessage('Request approved successfully');
+   
+      // seterror(true);
+      // console.log("approved succeessfully");
+      // setIsLoading(true);
+      
+      // Disable the button for the current request
+      // setDisabledButtons(prevState => ({ ...prevState, [id]: true }));
+      setDisabledButtons([id]);
+      // Simulating data fetching with setTimeout
+      setTimeout(async () => {
+        await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Approved`);
+        setMessage('Request approved successfully');
+        setIsLoading(false);
+        seterror(true);
+        console.log("approved successfully");
+      }, 2000); 
+      location.reload(true);
     } catch (error) {
       console.error('Error approving request:', error);
       setMessage('Error approving request');
@@ -58,8 +87,28 @@ const LeaveRequest = () => {
 
   const handleReject = async (id: string) => {
     try {
-      await axios.post(`http://localhost:5000/api/requests/${id}/reject`);
-      setMessage('Request rejected successfully');
+      // setIsLoading({ ...isLoading, [id]: true });
+      // // Simulating data fetching with setTimeout
+  
+      // await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Rejected`);
+      // setMessage('Request rejected successfully');
+     
+      // seterror(true);
+      // console.log("Rejected succeessfully");
+      // setIsLoading(true);
+   
+      // Disable the button for the current request
+      // setDisabledButtons(prevState => ({ ...prevState, [id]: true }));
+      setDisabledButtons([id]);
+      // Simulating data fetching with setTimeout
+      setTimeout(async () => {
+        await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Rejected`);
+        setMessage('Request rejected successfully');
+        setIsLoading(false);
+        seterror(true);
+        console.log("Rejected successfully");
+      }, 2000); 
+      location.reload(true);
     } catch (error) {
       console.error('Error rejecting request:', error);
       setMessage('Error rejecting request');
@@ -89,6 +138,9 @@ const LeaveRequest = () => {
                 <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
                   Reason
                 </th>
+                <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
+                  Status
+                </th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">
                   Actions
                 </th>
@@ -108,15 +160,24 @@ const LeaveRequest = () => {
                       {employee.firstName}
                     </h5>
                   </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <h5 className="font-medium text-black dark:text-white">
+                      {employee.employeeRole}
+                    </h5>
+                  </td>
                  
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {employee.fromDate}
+                      {/* {employee.fromDate} */}
+                      {/* {format(new Date(employee.fromDate.split('-').reverse().join('-')), 'dd-MM-yyyy')} */}
+                      {moment(employee.fromDate, 'YYYY-MM-DD').format('DD-MM-YYYY')}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                     <p className="text-black dark:text-white">
-                      {employee.toDate}
+                      {/* {employee.toDate} */}
+                      {/* {format(new Date(employee.toDate.split('-').reverse().join('-')), 'dd-MM-yyyy')} */}
+                      {moment(employee.toDate, 'YYYY-MM-DD').format('DD-MM-YYYY')}
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
@@ -125,10 +186,21 @@ const LeaveRequest = () => {
                     </p>
                   </td>
                   <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                    <p className="text-black dark:text-white">
+                      {employee.status}
+                    </p>
+                  </td>
+                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                 
+                   { (employee.status=='pending') ?(  
                     <div className="flex items-center space-x-3.5">
                         {/* <Link href={'/employees/edit-employees'}> */}
-                        <button className="hover:text-primary"  onClick={() => handleApprove(employee.employeeId)}>
-                       
+                    
+                        <button type='button'
+                         className="hover:text-primary"  onClick={() => handleApprove(employee._id)}  disabled={disabledButtons==employee._id || isLoading}>
+                        {isLoading ? (
+                  "Processing..."
+                ) :  (
                        <svg
                             width="24"
                             height="24"
@@ -146,13 +218,17 @@ const LeaveRequest = () => {
                             />
                           </svg>
 
-
+                        )} 
                          </button>
                         {/* </Link> */}
                       
 
-                      <button className="hover:text-primary" onClick={() => handleReject(employee.employeeId)}>
-                       
+                      <button 
+                      type='button'
+                      className="hover:text-primary" onClick={() => handleReject(employee._id)}   disabled={disabledButtons==employee._id || isLoading}>
+                      {isLoading ? (
+                  "Processing..."
+                ) :  (
                         <svg
                             width="24"
                             height="24"
@@ -170,8 +246,9 @@ const LeaveRequest = () => {
                             />
                           </svg>
 
-
+                      )}
                       </button>
+                     
                       {/* DOWNLOAD  BUTTON */}
                       {/* <button className="hover:text-primary">
                       <svg
@@ -193,6 +270,10 @@ const LeaveRequest = () => {
                       </svg>
                     </button> */}
                     </div>
+                ): (
+                  <p className="none"> </p>
+                )  }    
+                      
                   </td>
                 </tr>
               ))}

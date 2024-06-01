@@ -1,7 +1,8 @@
 // _app.tsx
 
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import store from "@/hooks/store";
+import { store } from "@/hooks/store";
+
 import { AppProps } from "next/app";
 import { Provider } from "react-redux";
 

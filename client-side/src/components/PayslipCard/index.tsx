@@ -1,8 +1,22 @@
-import React from 'react';
+"use client"
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
+import { Employee } from '@/types/employee';
+
 const Payslipcardview = () => {
+  const queryString = window.location.search;
+
+  // Parse the query string to get the URLSearchParams object
+  const params = new URLSearchParams(queryString);
+  const [id, setId] = useState(''); 
+  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
+
+  useEffect(() => {
+    const _id = new URLSearchParams( window.location.search).get('_id');
+    setId(_id??"");
+  },[]);
   return (
 
 <>
@@ -19,7 +33,8 @@ const Payslipcardview = () => {
       
       <Link 
   className="z-10 rounded-full bg-purple-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-orange-500"
-  href={'PaySlip/PayForm'}
+  // href={'PaySlip/PayForm'}
+  href={`/PaySlip/PayForm?_id=${id}`}
 >
   View slip
 </Link>
@@ -35,7 +50,8 @@ const Payslipcardview = () => {
       
     <Link 
   className="z-10 rounded-full bg-purple-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-orange-500"
-  href={'PaySlip/PayForm'}
+  // href={'PaySlip/PayForm'}
+  href={`/PaySlip/PayForm?_id=${id}`}
 >
   View slip
 </Link>

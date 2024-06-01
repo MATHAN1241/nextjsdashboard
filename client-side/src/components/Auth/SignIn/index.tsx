@@ -8,6 +8,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/auth";
 import User from "@/types/user";
 import { log } from "console";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserDetails } from '../../../hooks/userSlice';
+import { setProfile } from "@/hooks/redux/features/auth-slice";
+import { RootState } from "@/hooks/redux/store";
 
 // import { useAuth } from "@/hooks/auth";
 // export const extractUserData = (response: { data: { user: any; }; }) => {
@@ -22,8 +26,14 @@ import { log } from "console";
 const SignIn: React.FC = () => {
  // const { user, login, logout } = useAuth();
  //const  {setUserData}  = useAuth();
-
- const [user, setUser] = useState<User | null>(null);
+//  const {  name1 ,email1,id1 } = useSelector((state: RootState) => state.auth);
+//  const [profileData,setProfileData] = useState({
+//    name1:name1,
+//    email:email1,
+//    id1:id1,
+//  });
+//    const dispatch = useDispatch();
+  //  dispatch(setProfile(profileData));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -31,10 +41,24 @@ const SignIn: React.FC = () => {
   
   // const[details,setdetails]=useState(null);
   const router = useRouter();
-  
+
+    // const [profileData, setProfileData] = useState({
+    //     name1: name,
+    //     email1: uemail,
+    //     id1: id,
+      
+    //   });
+  // dispatch(setProfile(user));
+  // Dispatch action to set user details in Redux store
+  // if(user){
+  //  dispatch(setProfile(user));
+  // }else{
+  //   console.error("user is null");
+  // }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();   
+
     try {
       const formData={email,password};
       console.log(formData,"nnnn");
@@ -52,15 +76,24 @@ const SignIn: React.FC = () => {
       // }
       const response = await axios.post('http://localhost:5000/api/auth/login', formData);
       console.log(response,"ooooo");
-      
+      const token= response.data.token;
+      console.log("token: ",token);
+      localStorage.setItem('token', token);
       const user = response.data.user;
       const role=user.category;     
       const uemail=user.email;
       const id=user._id;
       const name=user.name;
+      // const [profileData, setProfileData] = useState({
+      //   name1: name,
+      //   email1: uemail,
+      //   id1: id,
+      
+      // });
       //localStorage.setItem('token', response.data.token);
       console.log("hello:",role,uemail,id,name);
-      setUser(response.data.user);
+      // setProfileData(user);
+      // dispatch(setProfile());
       // setUserData({
       //   role,uemail,id,name
       //   // role: user.category,
@@ -82,15 +115,7 @@ const SignIn: React.FC = () => {
       // Redirect or perform actions after successful login
     } catch (error:any) {
       console.error('Error:', error);
-      // if (error === 'Email error') {
-      //   window.alert('Invalid email format. Please enter a valid email.');
-      // } else if (error === 'Invalid password') {
-      //   window.alert('Invalid password format. Please enter a valid password.');
-      // } else if (error === 'User not found') {
-      //   window.alert('User not found. Please check your credentials and try again.');
-      // } else {
-      //   window.alert('Failed to login.');
-      // }
+    
 
       if (error.response) {
         setError(error.response.data.message);

@@ -16,6 +16,27 @@ router.post('/', async (req, res) => {
         res.status(500).json({ error: 'Server error' });
       }
 });
+router.get('/:id', async (req, res) => {
+  try {
+      const { id } = req.params;
+      const { status } = req.query; // Extract status from query parameters
+
+      // If status is provided, update the leave request status
+      if (status) {
+          await LeaveForm.findByIdAndUpdate(id, { status });
+          // Optionally, you can return a success message here
+          res.status(200).json({ message: 'Leave request status updated successfully' });
+      } else {
+          // If status is not provided, simply fetch leave request details
+          const leaveRequest = await LeaveForm.findById(id);
+          res.status(200).json(leaveRequest);
+      }
+  } catch (error) {
+      console.error('Error updating/fetching leave request:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 router.get('/', async (req, res) => {
     try {
       // Fetch data from MongoDB using Mongoose

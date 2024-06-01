@@ -63,11 +63,13 @@ const leaveRequestSchema = new mongoose.Schema({
   },
   
   fromDate: {
-      type: Date,
+      type: String,
+      
       
   },
   toDate: {
-      type: Date,
+      type: String,
+     
       
   },
   employeeRole: {
@@ -79,6 +81,7 @@ const leaveRequestSchema = new mongoose.Schema({
       type: String,
  
   },
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' }
  
 });
 

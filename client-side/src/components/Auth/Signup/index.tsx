@@ -176,7 +176,7 @@ const router=useRouter();
         //setError(errorMessages);
       }
       else if (errorData && errorData.error === 'Email already exists') {
-        setEmailError('*Emailll already exists'); // Set specific error message
+        setEmailError('*Email already exists'); // Set specific error message
       }
       else if (errorData && errorData.error === 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character') {
         setPasswordError( '*Passwordss must contain at least one uppercase letter, one lowercase letter, one number, and one special character confirm 8 charcters' );
