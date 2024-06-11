@@ -50,10 +50,16 @@ const ViewAttendance= () => {
    
 
 <div className="container mx-auto p-4">
+<<<<<<< HEAD
 
   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-3 lg:grid-cols-2 gap-4 ">
   {/* <Link href={"/Employeeattendance/ViewAttendanceTime"} className="block">
   <div className="bg-blue-200 p-4 w-full md:w-100 h-50 rounded-2xl">
+=======
+  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4">
+  <Link href={"/Employeeattendance/ViewAttendanceTime"} className="block">
+  <div className="bg-blue-200 p-4 w-full md:w-100 h-50 rounded-2xl hover:bg-blue-300 transition-colors duration-300 shadow-md">
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
     <div className="flex flex-col md:flex-row">
     {/* {attendanceRecords.map((record, id) => ( */}
     {/* {attendanceRecords.map(index => (
@@ -79,8 +85,13 @@ const ViewAttendance= () => {
    
     
       <div className="md:px-15">
+<<<<<<< HEAD
         <div>{index.formattedDate}</div>
         <div className="px-6">(Monday)</div>
+=======
+        <div className="text-blue-800">02/04/2024</div>
+        <div className="px-6 text-blue-800">(Monday)</div>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
         <div className="px-2 text-black">
           Late
           <span className="px-3 text-red font-bold">00:18</span>
@@ -104,6 +115,7 @@ const ViewAttendance= () => {
  {attendanceRecords.map(index => (
   <div key={index.employeeId}>
 
+<<<<<<< HEAD
     <div className="bg-blue-200 p-4 w-full md:w-100 h-50 rounded-2xl">
       <div className="flex flex-col md:flex-row ">
         <div className="flex justify-start text-blue-800">
@@ -136,10 +148,34 @@ const ViewAttendance= () => {
                                    </div>
                 </div>
                 <div className="py-5 text-red">{index.clockOutTime ?("PRESENT") : ("ABSENT")}</div>
+=======
+
+<a href={"/Employeeattendance/ViewAttendanceTime"} className="block">
+  <div className="bg-blue-200 p-4 w-full md:w-100 h-50 rounded-2xl hover:bg-blue-300 transition-colors duration-300 shadow-md">
+    <div className="flex flex-col md:flex-row">
+      <div className="flex justify-start text-blue-800">
+        <div>
+          ShiftGs
+          <div className="text-black">GENERAL SHIFT</div>
+          <div className="flex justify-between items-center">
+            <div className="px-3 py-2 text-black">
+              In
+              <span className="px-20 text-black">out</span>
+              <div className="flex items-center">
+                <div className="px-3 py-1 font-bold bg-blue-700 text-black rounded">10:00</div>
+                <div className="px-3"></div>
+                <div className="px-2 py-1 font-bold bg-blue-700 text-black rounded">18:00</div>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
               </div>
+              <div className="py-5 text-black">Reason name</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div className="md:px-15">
        
+<<<<<<< HEAD
 
 
           <div className=" md:px-15">
@@ -147,6 +183,11 @@ const ViewAttendance= () => {
             {/* <div>{index.clockInDate.split('/').reverse().join('-')}</div> */}
             <div>{formatDate(index.clockInDate)}</div>
             <div className="px-6">{getDayOfWeek(index.clockInDate)}</div>
+=======
+          <a>
+            <div className="text-blue-800">02/04/2024</div>
+            <div className="px-6 text-blue-800">(Monday)</div>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
             <div className="px-2 text-black">
               Late
               <span className="px-3 text-red font-bold">{index.lateTime}</span>
@@ -162,6 +203,7 @@ const ViewAttendance= () => {
                 {index.overtime  ? index.overtime : "00:00" }
               </span>
             </div>
+<<<<<<< HEAD
             <div className="py-4 px-5">
               {index.clockOutTime   ?  (<div  className="inline-flex items-center bg-green-400  p-1 rounded hover:bg-green-500  text-white">
      success
@@ -186,13 +228,29 @@ const ViewAttendance= () => {
           </div>
 
          
+=======
+          </a>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
         
+        <div className="py-4 px-5">
+          <a href={"/Employeeattendance/ViewRequestForm"}>
+            <div className="inline-flex items-center bg-yellow-400 p-1 rounded hover:bg-yellow-500 text-white">
+              pending
+            </div>
+          </a>
+        </div>
       </div>
     </div>
   </div>
+<<<<<<< HEAD
  ))}
   </div>
 
+=======
+</a>
+
+  </div>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
 </div>
 
 

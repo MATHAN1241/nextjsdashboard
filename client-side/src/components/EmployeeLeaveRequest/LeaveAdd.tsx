@@ -175,12 +175,16 @@ const [reason, setreason] = useState('');
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                    Reason <span className="text-meta-1">*</span>
                   </label>
+<<<<<<< HEAD
                   <textarea name="reason"
                     value={reason}
                     onChange={(e)=>setreason(e.target.value)}
                
                    
                   placeholder="enter your reson" 
+=======
+                  <textarea placeholder="Enter your reason" 
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                   className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000">
 
                   </textarea>

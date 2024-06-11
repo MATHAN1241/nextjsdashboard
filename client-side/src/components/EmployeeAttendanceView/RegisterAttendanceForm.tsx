@@ -1,5 +1,9 @@
 "use client"
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
+=======
+import React, { useState } from "react";
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
 import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import Link from "next/link";
 import axios from "axios";
@@ -8,14 +12,20 @@ import { Attendance } from "@/types/attendance";
 
 const Registerform = () => {
   const [employeeId, setEmployeeId] = useState("");
+<<<<<<< HEAD
   const[showModal,setShowModal]=useState(false);
   const [checkInTime, setCheckInTime] = useState("");
   const [checkOutTime, setCheckOutTime] = useState("");
   const [Message,setMessage]=useState("");
+=======
+  const [checkInTime, setCheckInTime] = useState("");
+  const [checkOutTime, setCheckOutTime] = useState("");
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
   const [currentDate, setCurrentDate] = useState<string>('');
   const [isCheckInClicked, setIsCheckInClicked] = useState<boolean>(false);
   const [totalHours, setTotalHours] = useState<number>(0);
   const [totalMinutes, setTotalMinutes] = useState<number>(0);
+<<<<<<< HEAD
   const [error,seterror]=useState('');
   //const [checkInDisabled, setCheckInDisabled] = useState(false);
   const [id, setId] = useState('');
@@ -53,6 +63,11 @@ const Registerform = () => {
   }, []);
   // const handleCheckOutClick = () => {
 
+=======
+  //const [checkInDisabled, setCheckInDisabled] = useState(false);
+
+  // const handleCheckOutClick = () => {
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
   //   // const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   //   // setCheckOutTime(currentTime);
   //   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -61,8 +76,13 @@ const Registerform = () => {
 
   //   // Calculate total hours and minutes
   //   if (checkInTime) {
+<<<<<<< HEAD
   //     const checkIn = new Date(`2000-01-01T${checkInTime}`);
   //     const checkOut = new Date(`2000-01-01T${currentTime}`);
+=======
+  //     const checkIn = new Date(2000-01-01T${checkInTime});
+  //     const checkOut = new Date(2000-01-01T${currentTime});
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
 
   //     const diffMilliseconds = checkOut.getTime() - checkIn.getTime();
   //     const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
@@ -73,6 +93,7 @@ const Registerform = () => {
   //     setTotalMinutes(minutes);
   //   }
   // };
+<<<<<<< HEAD
   // const handleCheckInClick = () => {
   //   const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   //   setCheckInTime(currentTime);
@@ -175,6 +196,36 @@ const Registerform = () => {
   //   }
   // };
 
+=======
+  const handleCheckInClick = () => {
+    const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    setCheckInTime(currentTime);
+  };
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/attendanceregister", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ employeeId, checkInTime, checkOutTime, currentDate }),
+      });
+
+      if (response.ok) {
+        // Data submitted successfully
+        console.log("Attendance recorded successfully.");
+      } else {
+        // Handle error response
+        console.error("Failed to record attendance.");
+      }
+    } catch (error) {
+      // Handle fetch error
+      console.error("Error recording attendance:", error);
+    }
+  };
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
   return (
     <>
          {error && (
@@ -218,8 +269,12 @@ const Registerform = () => {
              Register Form
             </h3>
           </div>
+<<<<<<< HEAD
         
           <form action="" >
+=======
+          <form onSubmit={handleSubmit}>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
             <div className="p-6.5">
             {/* <p  className="mb-3 red text-sm font-medium text-res dark:text-white">{error  ? error : ''}</p> */}
            
@@ -250,16 +305,24 @@ const Registerform = () => {
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                     required /> */}
                       <button
+<<<<<<< HEAD
                        type="button"
                        data-modal-target="popup-modal" 
                        data-modal-toggle="popup-modal"
                        className="w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
                        onClick={handleCheckInClick}
                       // onClick={() => setShowModal(true)}
+=======
+                    type="button"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                    onClick={handleCheckInClick}
+
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                     // disabled={!checkOutTime}
                   >
                     Register CheckIn Time
                   </button>
+<<<<<<< HEAD
                   {/* {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg">
@@ -284,6 +347,8 @@ const Registerform = () => {
           </div>
         </div>
       )} */}
+=======
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                   {/* <span className="text-sm text-gray-500" >{checkInTime}</span> */}
                   <input
                       type="text"
@@ -308,13 +373,19 @@ const Registerform = () => {
                   /> */}
                   <button
                     type="button"
+<<<<<<< HEAD
                     className="w-full inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
                     onClick={handleCheckOutClick}
                     // onClick={() => setShowModal(true)}
+=======
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
+                    // onClick={handleCheckOutClick}
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                     disabled={!checkInTime}
                   >
                     Register CheckOut Time
                   </button>
+<<<<<<< HEAD
                   {/* {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg shadow-lg">
@@ -340,6 +411,8 @@ const Registerform = () => {
           </div>
         </div>
       )} */}
+=======
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                   {/* <span className="text-sm text-gray-500">{checkOutTime}</span> */}
                   <input
                       type="text"
@@ -357,12 +430,21 @@ const Registerform = () => {
                     Total Time <span className="text-meta-1">*</span>
                   </label>
                   <span className="text-sm text-gray-500">
+<<<<<<< HEAD
                  {totalMinutes > 0 ? `${totalMinutes} minutes` : ''}
                   </span>
                 </div>
               </div> */}
               <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
                 <div className="w-full xl:w-full">
+=======
+                 {/* {totalMinutes > 0 ? ${totalMinutes} minutes : ''} */}
+                  </span>
+                </div>
+              </div>
+              <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">
+                <div className="w-full xl:w-1/2">
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                   <label className="mb-3 block text-sm font-medium text-black dark:text-white">
                     Curent Date <span className="text-meta-1">*</span>
                   </label>
@@ -386,19 +468,33 @@ const Registerform = () => {
                       placeholder="currentDate"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000 active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary focus-visible:shadow-[0_35px_60px_-15px_rgba(0,0,0,0.4)] transition-shadow duration-1000"
                    disabled />
+<<<<<<< HEAD
                 </div> 
+=======
+                </div>
+
+                
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
               </div>
 
+<<<<<<< HEAD
               {/* <Link
                 href="#" */}
                 
                 <div className="flex justify-between">
                 <Link 
     href={`/Employeeattendance?_id=${employeeId}`}>
+=======
+             
+
+              {/* <Link
+                href="#" */}
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
                 <button
                 className="inline-flex items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#14b8a6] via-[#059669] to-[#047857] px-10 py-4 text-center font-medium text-white duration-300 hover:scale-105 hover:bg-opacity-90 hover:from-[#047857] hover:to-[#14b8a6] hover:shadow-xl hover:shadow-green-500 lg:px-8 xl:px-10"
                  >
                
+<<<<<<< HEAD
                  Back
               {/* </Link> */}
               </button>
@@ -429,6 +525,11 @@ const Registerform = () => {
     </Link>
   </button> */}
   </div>
+=======
+                Clock Attendance Button
+              {/* </Link> */}
+              </button>
+>>>>>>> a6f22f3f6eddfbd2a101691e0effabdf6d4a98ec
             </div>
           </form>
           
