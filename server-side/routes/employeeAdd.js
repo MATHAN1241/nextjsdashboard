@@ -141,11 +141,12 @@ router.put('/:id', upload.single('imagePath'), async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-router.get('/:id', async (req, res) => {
+router.get('/:employeeId', async (req, res) => {
   try {
-    const employeeId = req.params.id;
+    const employeeId = req.params.employeeId;
     // Find the employee by ID in the database
-    const employee = await Employee.findById(employeeId);
+    // const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findOne({employeeId});
     if (!employee) {
       return res.status(404).json({ error: 'Employee not found' });
     }

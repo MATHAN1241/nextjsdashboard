@@ -26,7 +26,7 @@ const AttendanceList = () => {
   }, []);
   const router=useRouter();
   const handleClick=(employee:Employee)=>{
-    router.push(`attendance/attendancedetailview?_id=${employee._id}`);
+    router.push(`attendance/attendancemonths?_id=${employee.employeeId}`);
   };
 
   return (

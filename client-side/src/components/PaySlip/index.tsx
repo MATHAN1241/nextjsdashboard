@@ -23,7 +23,7 @@ const PaySlip = () => {
   const router=useRouter();
   const handleClick=(employee:Employee)=>{
     // router.push(`PaySlip/DashBoard?_id=${employee._id}`);
-    router.push(`EmployeePayslip?_id=${employee._id}`);
+    router.push(`EmployeePayslip?_id=${employee.employeeId}`);
   };
 
   return (

@@ -4,6 +4,7 @@ import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 import Image from "next/image";
 import axios from "axios";
 interface Employee {
+  sort(arg0: (a: any, b: any) => number): unknown;
   //_id:string;
   employeeId: string;
   firstName: string;
@@ -15,6 +16,18 @@ interface Employee {
   address:string;
   imagePath: string;
 }
+interface Record {
+  date: string;
+  checkInTime: string;
+  checkOutTime: string;
+  checkInStatus: string;
+  presentAbsent: string;
+  totalHours: string;
+  deductedSalary: number;
+  remainingSalary: number;
+  employeeDetails: Employee;
+}
+
 const Attendanceview = () => {
  //const [employee, setEmployee] = useState<Employee | null>(null);
  
@@ -26,11 +39,19 @@ const Attendanceview = () => {
  const [employeeData, setEmployeeData] = useState<Employee | null>(null);
   useEffect(() => {
     const _id = new URLSearchParams( window.location.search).get('_id');
+    const month = new URLSearchParams( window.location.search).get('month');
+    // const monthParam = new URLSearchParams(window.location.search).get('month');
+    //  const month = monthParam ? monthParam.padStart(2, '0') : null;
+
+    const year = new URLSearchParams( window.location.search).get('year');
     setId(_id??"");
     const fetchEmployeeData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/employees/${_id}`);
-        setEmployeeData(response.data);
+        const response = await axios.get(`http://localhost:5000/api/attendance/employee-details/${_id}?month=${month}&year=${year}`);
+        const data = response.data;
+        data.sort((a: Record, b: Record) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setEmployeeData(data);
+       // setEmployeeData(response.data);
     
       
       } catch (error) {
@@ -86,6 +107,12 @@ const Attendanceview = () => {
               <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
                 Total hours
               </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                Deduction Salary
+              </th>
+              <th className="min-w-[170px] px-4 py-4 font-medium text-black dark:text-white">
+                Remaining Salary
+              </th>
 
               <th className="px-4 py-4 font-medium text-black dark:text-white">
                 Actions
@@ -94,12 +121,12 @@ const Attendanceview = () => {
           </thead>
           <tbody>
             {/* {/* {employeeData.map((employee, key) => ( */}
-           
-               <tr  >
+            {employeeData.map((record, index) => (
+               <tr key={index}  >
                 <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                   <div className="h-12.5 w-15 rounded-md">
                     <Image
-                      src={`http://localhost:5000/${employeeData.imagePath}`}
+                      src={`http://localhost:5000/${record.employeeDetails.dp}`}
                       width={60}
                       height={50}
                       alt="Employee Display Picture"
@@ -108,49 +135,57 @@ const Attendanceview = () => {
                   </td>
                   <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <h5 className="font-medium text-black dark:text-white">
-                      {employeeData.employeeId}
+                  {record.employeeDetails.employeeId}
                     </h5>
                   </td>
                   <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <div>
                    
-                   <p className="text-black dark:text-white">{employeeData.firstName}</p>
+                   <p className="text-black dark:text-white">{record.employeeDetails.firstName}</p>
                  </div>
                 </td>
                   
                 
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                   {employeeData.lastName}
+                   {record.employeeDetails.lastName}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">{employeeData.employeeRole}</p>
+                  <p className="text-black dark:text-white">{record.employeeDetails.role}</p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
                   <p className="text-black dark:text-white">
-                   ${employeeData.employeeSalary}
+                   ${record.employeeDetails.employeeSalary}
                   </p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">01-04-2024</p>
+                  <p className="text-black dark:text-white">{record.date}</p>
                 </td>
                 
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">10:00-AM</p>
+                  <p className="text-black dark:text-white">{record.checkInTime}</p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">6:30-PM</p>
+                  <p className="text-black dark:text-white">{record.checkOutTime}</p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">good/late</p>
+                  <p className="text-black dark:text-white">{record.checkInStatus}</p>
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">present/absent</p>
+                  <p className="text-black dark:text-white">{record.presentAbsent}</p>
         
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">8hrs</p>
+                  <p className="text-black dark:text-white">{record.totalHours}</p>
+        
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">${record.deductedSalary.toFixed(2)}</p>
+        
+                </td>
+                <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
+                  <p className="text-black dark:text-white">${record.remainingSalary.toFixed(2)}</p>
         
                 </td>
                 <td className="border-b border-[#eee] px-6 py-5 dark:border-strokedark">
@@ -176,6 +211,7 @@ const Attendanceview = () => {
               </div>
               </td>
               </tr>
+            ))}
               </tbody>
               </table>
               </div>

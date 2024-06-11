@@ -3,6 +3,9 @@ import React, { useState, ReactNode } from "react";
 
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+// import { UserProvider, useUser } from "@/hooks/context/UserContext";
+import { AppProps } from "next/app";
+import { DataProvider } from "@/hooks/context/UserContext";
 interface UserData {
   role: string;
   uemail: string;
@@ -15,22 +18,29 @@ export default function DefaultLayout({
 }: {
   children: React.ReactNode;
  // userData:UserData; 
-}) {
+}, ) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // const { user, logout } = useUser();
   return (
     <>
+    <DataProvider>
+
+   
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  />
+        
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}    />
         {/* <!-- ===== Sidebar End ===== --> */}
-
+        
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+          
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}  />
           {/* <!-- ===== Header End ===== --> */}
-
+        
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
             <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
@@ -40,8 +50,11 @@ export default function DefaultLayout({
           {/* <!-- ===== Main Content End ===== --> */}
         </div>
         {/* <!-- ===== Content Area End ===== --> */}
+        
       </div>
       {/* <!-- ===== Page Wrapper End ===== --> */}
+      </DataProvider>
     </>
+    
   );
 }

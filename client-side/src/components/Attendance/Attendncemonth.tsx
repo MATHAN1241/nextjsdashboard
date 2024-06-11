@@ -5,8 +5,21 @@ import Link from 'next/link';
 import Breadcrumb from '../Breadcrumbs/Breadcrumb';
 import { Employee } from '@/types/employee';
 import axios from 'axios';
-
-const Payslipcardview = () => {
+const months = {
+  'January': '01',
+  'February': '02',
+  'March': '03',
+  'April': '04',
+  'May': '05',
+  'June': '06',
+  'July': '07',
+  'August': '08',
+  'September': '09',
+  'October': '10',
+  'November': '11',
+  'December': '12'
+};
+const Attendancemonth = () => {
   const queryString = window.location.search;
 
   // Parse the query string to get the URLSearchParams object
@@ -35,31 +48,39 @@ const Payslipcardview = () => {
   return (
 
 <>
-<Breadcrumb pageName='payslip-Months'/>
+<Breadcrumb pageName='Attendnance-Months'/>
+
+{monthsYears.length > 0 ?  (
 <div className="row">
   <div className="flex flex-cols-2 gap-8">
-    {monthsYears ? (monthsYears.map((item, index) => (
+    {monthsYears.length > 0 ? (monthsYears.map((item, index) => (
             <div key={index} className="group relative flex h-70 w-80 flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl from-sky-200 via-orange-200 to-orange-700 text-center shadow-xl before:absolute before:top-0 before:h-70 before:w-80 before:rounded-t-2xl before:bg-gradient-to-bl before:transition-all before:duration-500 before:content-[''] dark:bg-boxdark">
               <div className="z-10 transition-all duration-500">
                 <span className="text-2xl font-semibold dark:text-white">
-                  {item.month} {item.year} PaySlip
+                  {item.month} {item.year} Attendance
                 </span>
                 <p className="dark:text-white-50 italic">Employee</p>
               </div>
               <Link
                 className="z-10 rounded-full bg-purple-700 px-4 py-1 text-slate-50 shadow-md transition-all duration-500 hover:scale-125 hover:bg-orange-500"
-                href={`/PaySlip/PayForm?_id=${id}`}
+                href={`/attendance/attendancedetailview?_id=${id}&month=${months[item.month]}&year=${item.year}`}
               >
-                View slip
+                View Attendance
               </Link>
             </div>
           ))) : (
-            <div>
-              <span className="text-2xl font-semibold dark:text-white">No Recorded</span>
-            </div>
+                <div className='flex flex-col gap-8'>
+                  <span className="text-2xl font-semibold dark:text-red">No Records Found</span>
+                </div>   
           )}
+        
   </div>
 </div>
+  ):(
+    <div className='flex flex-col gap-8'>
+      <span className="text-2xl font-semibold dark:text-white">No Records Found</span>
+    </div>   
+)}
 
 
 
@@ -81,4 +102,4 @@ const Payslipcardview = () => {
   );
 }
 
-export default Payslipcardview;
+export default Attendancemonth;

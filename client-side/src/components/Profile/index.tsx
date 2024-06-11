@@ -1,13 +1,14 @@
 import React from "react";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Image from "next/image";
-
+//import {useUser} from '../../hooks/context/UserContext';
 
 import Link from "next/link";
 
 
 const profiled= () =>{
-  
+  //const { user } = useUser();
+
 return(
    <React.Fragment>
       <div className="mx-auto max-w-242.5">

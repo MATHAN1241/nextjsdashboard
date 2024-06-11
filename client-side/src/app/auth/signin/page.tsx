@@ -1,4 +1,5 @@
 import SignIn from "@/components/Auth/SignIn/index";
+import { DataProvider } from "@/hooks/context/UserContext";
 import { Metadata } from "next";
 
 import React from "react";
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
 
 const BasicSignInPage: React.FC = () => {
   return (
+    
       <SignIn />
+   
   );
 };
 

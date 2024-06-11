@@ -10,39 +10,63 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { format } from 'date-fns';
 import moment from 'moment';
+import { request } from "http";
 
-// import $ from 'jquery';
-// const employeeData: LeaveRequest[] = [
-//   {
-   
-//     employeeId: "1111",
-//     firstName: "John Doe",
-//     fromDate: "02/03/2024",
-//     toDate: "01/03/2024",
-//     reason: "sick leave"
-   
-//   },
-//   {
-//      employeeId: "1112",
-//      firstName: "Curie",
-//     fromDate: "02/04/2024",
-//     toDate: "01/04/2024",
-//     reason: "injury"
-//   },
-//   // Add more employee objects as needed
-// ];
+interface reqse{
+  _id:string;
+  employeeId: string;
+  firstName: string;
+  employeeRole:string;
+  fromDate: string;
+  toDate :string;
+  reason:string;
+  status:string;
+  
+}
+
+const ConfirmationModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: (id: string) => void;
+  message: string;
+  id: string;
+
+}> = ({ isOpen, onClose, onConfirm, message, id }) => {
+  return (
+    <>
+      {isOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-4 rounded-lg">
+            <p>{message}</p>
+            <div className="flex justify-center mt-4">
+              <button className="mr-2 px-4 py-2 bg-green-500 text-white rounded"  onClick={() => onConfirm(id)}>
+                Yes
+              </button>
+              <button className="px-4 py-2 bg-gray-300 text-gray-700 rounded" onClick={onClose}>
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
 const LeaveRequest = () => {
-  const[req,setRequests]=useState([]);
-  const [disabledButtons, setDisabledButtons] = useState<string[]>([]);
+  const[req,setRequests]=useState<reqse[]>([]);
+ // const [disabledButtons, setDisabledButtons] = useState<string[]>([]);
   const[rmes,setMessage]=useState('');
   const[error,seterror]=useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [disabledButtons, setDisabledButtons] = useState('');
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
   const router=useRouter();
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get<EmployeeLeaveRequest[]>('http://localhost:5000/api/leaverequests');
+        const response = await axios.get<reqse[]>('http://localhost:5000/api/leaverequests');
         setRequests(response.data);
         
       } catch (error) {
@@ -53,67 +77,76 @@ const LeaveRequest = () => {
   }, []);
 
   const handleApprove = async (id: string) => {
+    setIsLoading(true);
+    setDisabledButtons(id);
     try {
-      // setIsLoading(true);
-      // // Simulating data fetching with setTimeout
-      // setTimeout(() => {
-      //   // Your data fetching logic here
-      //   setIsLoading(false);
-      // }, 2000); 
-      // await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Approved`);
-      // setMessage('Request approved successfully');
-   
-      // seterror(true);
-      // console.log("approved succeessfully");
-      // setIsLoading(true);
+     
+      // setDisabledButtons(id);
+      // setShowApproveModal(true);
       
-      // Disable the button for the current request
-      // setDisabledButtons(prevState => ({ ...prevState, [id]: true }));
-      setDisabledButtons([id]);
       // Simulating data fetching with setTimeout
       setTimeout(async () => {
         await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Approved`);
         setMessage('Request approved successfully');
         setIsLoading(false);
         seterror(true);
+        location.reload(true);
         console.log("approved successfully");
       }, 2000); 
-      location.reload(true);
+    
+      //isLoading(true);
     } catch (error) {
       console.error('Error approving request:', error);
       setMessage('Error approving request');
+    } finally {
+       setIsLoading(true);
+      //window.location.reload();
     }
   };
 
   const handleReject = async (id: string) => {
+    setIsLoading(true);
+    setDisabledButtons(id);
     try {
-      // setIsLoading({ ...isLoading, [id]: true });
-      // // Simulating data fetching with setTimeout
-  
-      // await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Rejected`);
-      // setMessage('Request rejected successfully');
      
-      // seterror(true);
-      // console.log("Rejected succeessfully");
-      // setIsLoading(true);
-   
-      // Disable the button for the current request
-      // setDisabledButtons(prevState => ({ ...prevState, [id]: true }));
-      setDisabledButtons([id]);
-      // Simulating data fetching with setTimeout
       setTimeout(async () => {
         await axios.get(`http://localhost:5000/api/leaverequests/${id}?status=Rejected`);
         setMessage('Request rejected successfully');
         setIsLoading(false);
         seterror(true);
+        location.reload(true);
         console.log("Rejected successfully");
       }, 2000); 
-      location.reload(true);
+     
     } catch (error) {
       console.error('Error rejecting request:', error);
       setMessage('Error rejecting request');
+    } finally {
+      setIsLoading(true);
+      
     }
+
   };
+  const handleConfirmApprove = async (id:string) => {
+    // setIsLoading(true);
+    // // Perform your approve logic here
+    // setIsLoading(false);
+    // setShowApproveModal(false);
+    // location.reload(true);
+    setShowApproveModal(false);
+    handleApprove(id);
+  };
+
+  const handleConfirmReject = async (id:string) => {
+    // setIsLoading(true);
+    // // Perform your reject logic here
+    // setIsLoading(false);
+    // setShowRejectModal(false);
+    // location.reload(true);
+    setShowApproveModal(false);
+    handleReject(id);
+  };
+
   return (
     <>
       <Breadcrumb pageName="Leave Request" />
@@ -196,8 +229,8 @@ const LeaveRequest = () => {
                     <div className="flex items-center space-x-3.5">
                         {/* <Link href={'/employees/edit-employees'}> */}
                     
-                        <button type='button'
-                         className="hover:text-primary"  onClick={() => handleApprove(employee._id)}  disabled={disabledButtons==employee._id || isLoading}>
+                        {/* <button type='button'
+                         className="hover:text-primary"  onClick={() => handleApprove(employee._id)}  disabled={disabledButtons == employee._id || isLoading}>
                         {isLoading ? (
                   "Processing..."
                 ) :  (
@@ -219,11 +252,11 @@ const LeaveRequest = () => {
                           </svg>
 
                         )} 
-                         </button>
+                         </button> */}
                         {/* </Link> */}
                       
 
-                      <button 
+                      {/* <button 
                       type='button'
                       className="hover:text-primary" onClick={() => handleReject(employee._id)}   disabled={disabledButtons==employee._id || isLoading}>
                       {isLoading ? (
@@ -247,8 +280,54 @@ const LeaveRequest = () => {
                           </svg>
 
                       )}
-                      </button>
-                     
+                      </button> */}
+                       <button
+        type="button"
+        className="hover:text-primary"
+        onClick={() =>  setShowApproveModal(true)}
+        disabled={disabledButtons === employee._id || isLoading}
+      >
+        {isLoading ? (
+          'Processing...'
+        ) : (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#4CAF50" />
+            <path d="M16.5 9L11 14.5L7.5 11" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </button>
+
+      <button
+        type="button"
+        className="hover:text-primary"
+        onClick={() => setShowRejectModal(true)}
+        disabled={disabledButtons === employee._id || isLoading}
+      >
+        {isLoading ? (
+          'Processing...'
+        ) : (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#FF5252" />
+            <path d="M7 7L17 17M17 7L7 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </button>
+
+      <ConfirmationModal
+        isOpen={showApproveModal}
+        onClose={() => setShowApproveModal(false)}
+        onConfirm={handleConfirmApprove}
+        message="Are you sure you want to approve?"
+        id={employee._id}
+      />
+
+      <ConfirmationModal
+        isOpen={showRejectModal}
+        onClose={() => setShowRejectModal(false)}
+        onConfirm={handleConfirmReject}
+        message="Are you sure you want to reject?"
+        id={employee._id}
+      />
                       {/* DOWNLOAD  BUTTON */}
                       {/* <button className="hover:text-primary">
                       <svg

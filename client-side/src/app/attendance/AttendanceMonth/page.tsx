@@ -1,21 +1,20 @@
-import Ecommerce from "@/components/Dashboard/E-commerce";
+
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import React from "react";
-import { AppProps } from "next/app";
+
+import Attendancemonth from "@/components/Attendance/Attendncemonth";
 
 export const metadata: Metadata = {
   title: "Lyzoo AI Attendance Dashboard",
   description: "This is Lyzoo AI Attendance Dashboard",
 };
 
-const BasicEcommercePage: React.FC = () => {
+const AttendancePage = () => {
   return (
-    
-    <DefaultLayout >
-      <Ecommerce  />
+    <DefaultLayout>
+          <Attendancemonth/>
     </DefaultLayout>
   );
 };
 
-export default BasicEcommercePage;
+export default AttendancePage;

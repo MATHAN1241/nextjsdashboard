@@ -51,7 +51,7 @@ const ViewAttendance= () => {
 
 <div className="container mx-auto p-4">
 
-  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 lg:grid-cols-2 gap-4 ">
+  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-3 lg:grid-cols-2 gap-4 ">
   {/* <Link href={"/Employeeattendance/ViewAttendanceTime"} className="block">
   <div className="bg-blue-200 p-4 w-full md:w-100 h-50 rounded-2xl">
     <div className="flex flex-col md:flex-row">

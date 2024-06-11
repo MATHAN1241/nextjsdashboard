@@ -12,7 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUserDetails } from '../../../hooks/userSlice';
 import { setProfile } from "@/hooks/redux/features/auth-slice";
 import { RootState } from "@/hooks/redux/store";
-
+import Cookies from 'js-cookie';
+import { useData } from "@/hooks/context/UserContext";
+// import { useUser } from "@/hooks/context/UserContext";
 // import { useAuth } from "@/hooks/auth";
 // export const extractUserData = (response: { data: { user: any; }; }) => {
 //   const user = response.data.user;
@@ -34,6 +36,8 @@ const SignIn: React.FC = () => {
 //  });
 //    const dispatch = useDispatch();
   //  dispatch(setProfile(profileData));
+  // const { setUser } = useUser();
+  const { setData } = useData();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
@@ -79,11 +83,14 @@ const SignIn: React.FC = () => {
       const token= response.data.token;
       console.log("token: ",token);
       localStorage.setItem('token', token);
+      // setUser(response.data);
+      setData(response.data);
       const user = response.data.user;
       const role=user.category;     
       const uemail=user.email;
       const id=user._id;
       const name=user.name;
+      
       // const [profileData, setProfileData] = useState({
       //   name1: name,
       //   email1: uemail,

@@ -109,8 +109,11 @@ const employeeAdd= require('./routes/employeeAdd');
 const leaveform = require('./routes/leaveRequestform');
 const leaveRequestRoutes = require('./routes/leaverequests');
 const dashboard= require('./routes/dashboard');
+const Bankdtls=require('./routes/BankDetails');
 const attendance=require('./routes/attendanceForm')
 const verifyToken = require('./middleware/auth');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const multer = require('multer');
@@ -119,6 +122,18 @@ const multer = require('multer');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
+
+//Session setup
+app.use(session({
+  secret: 'your_secret_key', // Replace with your own secret key
+  resave: false,
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://localhost:27017/lyzooattendance', // Replace with your MongoDB URL
+    ttl: 60 * 60, // 1 hour session timeout
+  }),
+  cookie: { maxAge: 60 * 60 * 1000 } // 1 hour session timeout
+}));
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/lyzooattendance', {
@@ -149,6 +164,7 @@ app.use(express.static('public'));
 app.use('/api/requests', leaveRequestRoutes);
 app.use('/api/leaverequests',leaveform);
 app.use('/api/home',dashboard);
+app.use('/api/Bankdtls',Bankdtls);
 app.use('/api/attendance',attendance);
 // app.use('/api/attendanceregister', registerRouter);
 

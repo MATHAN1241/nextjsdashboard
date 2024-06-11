@@ -17,7 +17,8 @@ const RequestStatus= () => {
   const [requestedClockOutTime,setrequestclockout]=useState("");
   const [requestedOvertime,setrequestedovertime]=useState("");
   const [remarks,setremarks]=useState("");
-  const [images, setImages] = useState([]);
+  //const [images, setImages] = useState([]);
+  const [images, setImages] = useState<FileList | null>(null);
   const moment = require('moment-timezone');
   useEffect(() => {
     
@@ -73,29 +74,85 @@ const RequestStatus= () => {
   //   }
   //    //router.push(`/Employeeattendance/ViewAttendanceform?_id=${employeeId}`) 
   // }
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await axios.post('http://localhost:5000/api/attendance/clockout/request', {
+  //       employeeId,
+  //       clockInTime,
+  //       requestedClockOutTime,
+  //       remarks,
+  
+  //     });
+  //     router.push( `/Employeeattendance/ViewAttendanceform?_id=${employeeId}`);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error('Error submitting clock-out request:', error);
+  //   }
+  // };
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!employeeId || !clockInTime || !requestedClockOutTime || !remarks) {
+      setMessage('All fields except images are required');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('employeeId', employeeId);
+    formData.append('clockInTime', clockInTime);
+    formData.append('requestedClockOutTime', requestedClockOutTime);
+    formData.append('remarks', remarks);
+
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        formData.append('images', images[i]);
+      }
+    }
+
     try {
-      const response = await axios.post('http://localhost:5000/api/attendance/clockout/request', {
-        employeeId,
-        clockInTime,
-        requestedClockOutTime,
-        remarks,
-  
+      const response = await axios.post('http://localhost:5000/api/attendance/clockout/request', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },   
       });
       router.push( `/Employeeattendance/ViewAttendanceform?_id=${employeeId}`);
       console.log(response.data);
+
+      if (response.status === 200) {
+        setMessage('Clock-out request submitted successfully');
+        // Clear the form
+        setEmployeeId('');
+        setCheckInTime('');
+        setrequestclockout('');
+        setremarks('');
+        setImages(null);
+   
+      } else {
+        setMessage('Aleady Submitted');
+      }
     } catch (error) {
-      console.error('Error submitting clock-out request:', error);
+      if (error == 'Error submitting clock-out request' ){
+      setMessage('Error submitting clock-out request');
+      }
+      else if( error == 'A clock-out request for this date already exists'){
+        setMessage('A clock-out request for this date already exists');
+      }
+      console.error('Error:', error);
+      setMessage('A clock-out request for this date already exists');
     }
   };
- 
   return (
     <>
     <Breadcrumb pageName="Approval form" />
     {/* <form action="" onSubmit={handleSubmit}> */}
+
 <div className="max-w-xxl mx-auto bg-white p-8 rounded shadow-md shadow-default dark:border-strokedark dark:bg-boxdark">
+{message && <p>{message}</p>}
+
        <form action="#" onSubmit={handleSubmit}> 
             <h2 className="text-2xl font-bold mb-4">Attendance Request Form</h2>   
        <div className="mb-4.5 flex flex-col gap-6 xl:flex-row">

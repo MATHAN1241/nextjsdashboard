@@ -10,10 +10,22 @@ import MapOne from "../Maps/MapOne";
 import axios from "axios";
 import { useDispatch,  useSelector } from "react-redux";
 import { RootState } from "@/hooks/redux/store";
+import { useRouter } from "next/navigation";
 
 
 
 const ECommerce: React.FC = () => {
+//   const router=useRouter();
+//  useEffect(() => {
+//     // Perform authentication check here
+//     // For simplicity, let's assume the user is authenticated
+//     const isAuthenticated = true;
+
+//     if (!isAuthenticated) {
+//       router.push('/auth/signin');
+//     }
+//   }, []);
+
 
     const [userData,setUserData]=useState(null);
    useEffect(()=>{

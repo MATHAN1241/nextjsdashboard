@@ -14,14 +14,25 @@ import User from "@/types/user";
 import  {useRouter } from "next/navigation";
 import { RootState } from "@/hooks/redux/store";
 import authReducer from '../../hooks/redux/features/auth-slice';
+import Cookies from 'js-cookie';
+import { useData } from "@/hooks/context/UserContext";
+// import { useUser } from "@/hooks/context/UserContext";
+import {getSessionUser} from '../../app/services/api'
 
-
+interface UserData {
+  _id: string;
+  email: string;
+  category: string;
+  name: string;
+  token: string;
+}
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
+  // const { user } = useUser();
   // const dispatch = useDispatch();
   // const { user } = useSelector((state: RootState) => state.auth);
   // const { name1 ,email1,  id1 } = useSelector((state: RootState) => state.auth);
@@ -38,6 +49,51 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
   // console.log(user?.email);
   // console.log(user?.category);
   // const useRole=getuseRole();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { data } = useData();
+  console.log(data);
+  // useEffect(() => {
+  //   //const cookieData = Cookies.get('userData');
+  //   const userDataCookie = Cookies.get('userData');
+
+  //   if (userDataCookie) {
+  //     const parsedUserData = JSON.parse(userDataCookie);
+  //     setUserData(parsedUserData);
+  //     console.log('UserData inside useEffect:', parsedUserData);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const userDataCookie = Cookies.get('userData');
+  //       console.log('Raw userData cookie:', userDataCookie); // Log raw cookie data
+  //       if (userDataCookie) {
+  //         const parsedUserData = JSON.parse(userDataCookie);
+  //         console.log('Parsed userData:', parsedUserData); // Log parsed user data
+  //         setUserData(parsedUserData);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error parsing user data from cookie:', error); // Log parsing error
+  //     }
+  //   };
+
+  //   fetchUserData();
+  // }, []);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await getSessionUser();
+        setUserData(userData);
+      } catch (err) {
+        setError('Failed to fetch user data');
+      } 
+    };
+
+    fetchUser();
+  }, []);
+
+  console.log('hell:',userData);
   const pathname = usePathname();
   // const[category,setcategory]=useState<String | null>(null);
   const trigger = useRef<any>(null);
@@ -186,10 +242,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
          
             {/* {(userData?.role === null) && ( */}
             <div>
+            
               <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
-                Admin Attendance View
+                Admin Attendance View {userData?.name}
               </h3>
-
+              
               <ul className="mb-6 flex flex-col gap-1.5">
                 {/* <!-- Menu Item Dashboard --> */}
                 <SidebarLinkGroup
@@ -550,7 +607,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen}: SidebarProps) => {
               {/* <!-- Menu Item PaySlip Request --> */}
               <li>
                 <Link
-                  href={"/EmployeePayslip"}
+                  href={`/EmployeePayslip?_id=567829`}
                   className={`group relative flex items-center gap-2.5 rounded-sm px-4 py-2 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${pathname.includes("paySlip") &&
                     "bg-graydark dark:bg-meta-4"
                     }`}
